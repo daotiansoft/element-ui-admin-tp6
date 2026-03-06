@@ -1,0 +1,110 @@
+<?php
+// +----------------------------------------------------------------------
+// | WaitAdmin快速开发后台管理系统
+// +----------------------------------------------------------------------
+// | 欢迎阅读学习程序代码,建议反馈是我们前进的动力
+// | 程序完全开源可支持商用,允许去除界面版权信息
+// | gitee:   https://gitee.com/wafts/waitadmin-php
+// | github:  https://github.com/topwait/waitadmin-php
+// | 官方网站: https://www.waitadmin.cn
+// | WaitAdmin团队版权所有并拥有最终解释权
+// +----------------------------------------------------------------------
+// | Author: WaitAdmin Team <2474369941@qq.com>
+// +----------------------------------------------------------------------
+declare (strict_types = 1);
+
+namespace app\common\service;
+
+use app\common\exception\RequestException;
+use app\common\model\ConfigModel;
+use app\common\model\LoginLogModel;
+use app\common\model\UserModel;
+use app\common\utils\UrlUtils;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+use think\facade\Cache;
+
+/**
+ * 登录服务类
+ */
+class LoginService
+{
+    protected static function getJwtKey(){
+        $cache_key = 'jwt_key';
+        $key = Cache::get($cache_key);
+        if(empty($key)){
+            $key = md5(get_rand_str(32).get_rand_str(32));
+            Cache::set($cache_key,$key);
+        }
+        return $key;
+    }
+
+    /*
+     * 创建授权信息
+     */
+    public static function buildAuthorization($data = []){
+        $payload = array(
+            "iss" => UrlUtils::getDomain(), // 发行人
+            "aud" => UrlUtils::getDomain(), // 接收者
+            "iat" => time(), // 发行时间
+            "nbf" => time(), // 生效时间
+            "exp" => time() + 3600 * 1, // 过期时间（例如，1小时后过期）
+            "data" => $data
+        );
+        $jwt = JWT::encode($payload, self::getJwtKey(), 'HS256');
+        return $jwt;
+    }
+
+    /*
+     * 验证授权信息 返回用户信息
+     */
+    public static function checkAuthorization($jwt_str = ''){
+        $decoded = JWT::decode($jwt_str, new Key(self::getJwtKey(), 'HS256'));
+        $userData = $decoded->data; // 获取用户信息
+        return $userData;
+    }
+
+    public static function login($params = []){
+        $loginLogModel = new LoginLogModel();
+
+        $cacke_key = 'login_fail_' . $params['username'];
+        $loginFailCount = intval(Cache::get($cacke_key));
+        $loginFailMax = 5; //最大尝试次数
+        if($loginFailCount >= $loginFailMax){
+            throw new RequestException('密码重试次数过多，请稍后重试！');
+        }
+        $userModel = new UserModel();
+        $userItem = $userModel->where('username','=',$params['username'])->field($userModel->fields)->find();
+        if(!$userItem || $userItem['status'] != UserModel::STATUS_ON){
+            throw new RequestException('账号不存在或已停用！');
+        }
+
+        if(get_password($params['password'],$userItem['rand_code']) != $userItem['password']){
+            Cache::set($cacke_key,$loginFailCount + 1);
+            $loginLogModel->log($userItem['id'],'',$loginLogModel::STATUS_FAIL,request()->ip());
+            throw new RequestException('密码不正确，您还可以尝试['.($loginFailMax - $loginFailCount - 1).']次!');
+        }
+
+        Cache::delete($cacke_key);
+
+        $loginLogModel->log($userItem['id'],'',$loginLogModel::STATUS_SUCC,request()->ip());
+
+        //系统停用 限制登录
+        if($userItem['type'] != UserModel::TYPE_ADMIN){
+            $config = new ConfigModel();
+            $site_status = intval($config->getContentByKey('site_status'));
+            if($site_status != $config::SITE_STATUS_ON){
+                $site_stop_msg = $config->getContentByKey('site_stop_msg');
+                throw new RequestException($site_stop_msg);
+            }
+        }
+
+        $data = [
+            'uid'=>$userItem['id'],
+            'username'=>$userItem['username']
+        ];
+
+        $auth = self::buildAuthorization($data);
+        return $auth;
+    }
+}

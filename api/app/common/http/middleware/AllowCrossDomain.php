@@ -29,7 +29,7 @@ class AllowCrossDomain
      * @param Closure $next
      * @return mixed
      */
-    public function handle($request, Closure $next): mixed
+    public function handle($request, Closure $next)
     {
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Headers: *');

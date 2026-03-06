@@ -18,11 +18,8 @@ class CommonModel extends Model
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getItemById($id,$cache_time = 0){
-        if($cache_time > 0){
-            return $this->field($this->fields)->cache($cache_time)->find($id);
-        }
-        return $this->field($this->fields)->find($id);
+    public function getItemById($id){
+        return $this->field($this->fields)->find($id)->toArray();
     }
 
     /** 获取所有字段

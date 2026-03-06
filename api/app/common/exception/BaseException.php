@@ -37,5 +37,5 @@ abstract class BaseException extends Exception
      * 响应数据
      * @var array
      */
-    public array $data    = [];
+    public $data    = [];
 }

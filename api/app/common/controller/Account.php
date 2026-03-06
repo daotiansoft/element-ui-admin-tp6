@@ -1,34 +1,25 @@
 <?php
 namespace app\common\controller;
 
-use app\BaseController;
-use app\common\model\ActivationCodeModel;
+use app\common\basics\Auth;
 use app\common\model\EditorModel;
-use app\common\model\TokenModel;
 use app\common\model\UploadModel;
 use app\common\model\UserModel;
 use think\App;
 
 
-class Account extends BaseController
+class Account extends Auth
 {
-
-    //验证登录
-    protected $middleware = [\app\middleware\LoginAuth::class];
-
     public function info(){
         $userinfo=array();
-        $userinfo['uid']=$this->request->userData['id'];
-        $userinfo['username']=$this->request->userData['username'];
+        $userinfo['uid']=$this->userItem['id'];
+        $userinfo['username']=$this->userItem['username'];
         $userinfo['avatar']='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80';
-        $userinfo['roles'] = [$this->request->userData['type']];
-        $userinfo['balance']=$this->request->userData['balance'];
+        $userinfo['roles'] = [$this->userItem['type']];
         return $this->success("SUCCESS",$userinfo);
     }
 
     public function logout(){
-        $token_model=new TokenModel();
-        $token_model->logout($this->request->userData['id'],$token_model::DEVICE_API);
         return $this->success("退出成功");
     }
 
@@ -130,67 +121,6 @@ class Account extends BaseController
             }
         } catch (\think\exception\ValidateException $e) {
             return $this->error($e->getMessage());
-        }
-    }
-
-    public function active(){
-        $code=$this->request->param('code');
-        if(empty($code)){
-            return $this->error("请输入激活码");
-        }
-        $uid=$this->request->userData['id'];
-        $vip_time= $this->request->userData['vip_time'];
-
-        $activation_code = new ActivationCodeModel();
-        $activation_code->startTrans();
-        $item = $activation_code->where('code','=',$code)->field($activation_code->fields)->find();
-        if(!$item || $item['active_uid'] > 0){
-            $activation_code->rollback();
-            return $this->error("激活码不存在");
-        }
-
-        $activation_code->where('code','=',$code)->update(array('active_uid'=>$uid,'active_time'=>time()));
-        $activation_code->commit();
-
-        $member=new UserModel();
-
-        $activation_data=$uid=$this->request->userData['activation_data'];
-        if(empty($activation_data)){
-            $activation_data=array();
-        }else{
-            $activation_data=json_decode($activation_data,true);
-        }
-        if(!isset($activation_data[$item['cate_id']])){
-            $activation_data[$item['cate_id']]=array();
-        }
-        if(!isset($activation_data[$item['cate_id']]['expire_time'])){
-            $activation_data[$item['cate_id']]['expire_time'] = 0;
-        }
-        if(!isset($activation_data[$item['cate_id']]['amount'])){
-            $activation_data[$item['cate_id']]['amount'] = 0;
-        }
-
-        if($item['time'] > 0){
-            //充值时间
-            if($activation_data[$item['cate_id']]['expire_time'] > time()){
-                $activation_data[$item['cate_id']]['expire_time'] +=$item['time'] * 60 * 60;
-            }else{
-                $activation_data[$item['cate_id']]['expire_time'] =time() + $item['time'] * 60 * 60;
-            }
-        }
-        if($item['amount'] > 0){
-            //充值次数
-            $activation_data[$item['cate_id']]['amount'] +=$item['amount'];
-        }
-
-        $data=[];
-        $data['update_time']=time();
-        $data['activation_data']=json_encode($activation_data);
-        $req=$member->where('id','=',$uid)->update($data);
-        if($req){
-            return $this->success("激活成功");
-        }else{
-            return $this->error("激活失败");
         }
     }
 }

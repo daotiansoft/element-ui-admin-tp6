@@ -24,8 +24,8 @@ class ConfigModel extends CommonModel
         'sort',
         'show'
     ];
-    public function getContentByKey($key,$cache_time = 60){
-        $req= $this->where('key','=',$key)->field($this->fields)->cache($cache_time)->find();
+    public function getContentByKey($key){
+        $req= $this->where('key','=',$key)->field($this->fields)->find();
         if($req){
             return $req['content'];
         }

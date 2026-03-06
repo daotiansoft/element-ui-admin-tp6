@@ -54,7 +54,7 @@ class AjaxUtils
      * @return Json
      * @author zero
      */
-    public static function success($msg='操作成功', array $data=[], int $code=0, int $httpCode=200): Json
+    public static function success($msg='操作成功', array $data=[], int $code=1, int $httpCode=200): Json
     {
         if (is_array($msg) && empty($data)) {
             $data = $msg;
