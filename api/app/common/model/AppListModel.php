@@ -1,6 +1,8 @@
 <?php
 namespace app\common\model;
 
+use think\model\relation\HasOne;
+
 class AppListModel extends CommonModel
 {
     protected $name = 'app_list';
@@ -8,13 +10,27 @@ class AppListModel extends CommonModel
     const STATUS_ON = 1;
     const STATUS_OFF = -1;
 
-    public $fields=[
-        'id',
-        'appid',
-        'secret',
-        'status',
-        'remark',
-        'create_time',
-        'update_time'
+    protected $schema = [
+        'id'=>'int',
+        'uid'=>'int',
+        'appid'=>'string',
+        'secret'=>'string',
+        'status'=>'int',
+        'remark'=>'string',
+        'create_time'=>'int',
+        'update_time'=>'int'
     ];
+
+    /**
+     * 单关联
+     *
+     * @author zero
+     * @return HasOne
+     */
+    public function user(): HasOne
+    {
+        return $this->hasOne(UserModel::class, 'id', 'uid')
+            ->field('id,username');
+    }
+
 }

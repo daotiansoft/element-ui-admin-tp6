@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 07/03/2026 11:17:43
+ Date: 07/03/2026 16:19:50
 */
 
 SET NAMES utf8mb4;
@@ -32,7 +32,12 @@ CREATE TABLE `dt_app_list`  (
   `update_time` int(10) NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `appid`(`appid`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '应用接口' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of dt_app_list
+-- ----------------------------
+INSERT INTO `dt_app_list` VALUES (14, 2, 'test', 'test', 1, '', 1772865592, 1772865592);
 
 -- ----------------------------
 -- Table structure for dt_config
@@ -92,7 +97,7 @@ CREATE TABLE `dt_login_log`  (
   `desc` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
   `ip` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 38 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '登录记录' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 40 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '登录记录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of dt_login_log
@@ -134,6 +139,8 @@ INSERT INTO `dt_login_log` VALUES (34, 1, '', 1772850457, 1, '', '127.0.0.1');
 INSERT INTO `dt_login_log` VALUES (35, 1, '', 1772850831, 1, '', '127.0.0.1');
 INSERT INTO `dt_login_log` VALUES (36, 1, '', 1772851277, 2, '', '127.0.0.1');
 INSERT INTO `dt_login_log` VALUES (37, 1, '', 1772851285, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (38, 1, '', 1772856924, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (39, 1, '', 1772860651, 1, '', '127.0.0.1');
 
 -- ----------------------------
 -- Table structure for dt_perms
@@ -146,7 +153,7 @@ CREATE TABLE `dt_perms`  (
   `action` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `status` tinyint(1) NULL DEFAULT 1,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '权限' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '权限' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of dt_perms
@@ -160,6 +167,37 @@ INSERT INTO `dt_perms` VALUES (6, '账号管理', 'admin', 'super/member/items',
 INSERT INTO `dt_perms` VALUES (7, '账号管理', 'admin', 'super/member/add', 1);
 INSERT INTO `dt_perms` VALUES (8, '账号管理', 'admin', 'super/member/edit', 1);
 INSERT INTO `dt_perms` VALUES (9, '账号管理', 'admin', 'super/member/del', 1);
+INSERT INTO `dt_perms` VALUES (10, '接口管理', 'admin', 'super/applist/items', 1);
+INSERT INTO `dt_perms` VALUES (11, '接口管理', 'admin', 'super/applist/add', 1);
+INSERT INTO `dt_perms` VALUES (12, '接口管理', 'admin', 'super/applist/edit', 1);
+INSERT INTO `dt_perms` VALUES (13, '接口管理', 'admin', 'super/applist/del', 1);
+INSERT INTO `dt_perms` VALUES (14, '角色管理', 'admin', 'super/roles/items', 1);
+INSERT INTO `dt_perms` VALUES (15, '角色管理', 'admin', 'super/roles/add', 1);
+INSERT INTO `dt_perms` VALUES (16, '角色管理', 'admin', 'super/roles/edit', 1);
+INSERT INTO `dt_perms` VALUES (17, '角色管理', 'admin', 'super/roles/del', 1);
+INSERT INTO `dt_perms` VALUES (18, '角色管理', 'admin', 'super/roles/all', 1);
+
+-- ----------------------------
+-- Table structure for dt_roles
+-- ----------------------------
+DROP TABLE IF EXISTS `dt_roles`;
+CREATE TABLE `dt_roles`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+  `name` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+  `status` tinyint(1) NULL DEFAULT 0,
+  `remark` varchar(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+  `create_time` int(10) NULL DEFAULT 0,
+  `update_time` int(10) NULL DEFAULT 0,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `type`(`type`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '角色' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of dt_roles
+-- ----------------------------
+INSERT INTO `dt_roles` VALUES (1, 'admin', '管理员', 1, '不可删除', 1772866827, 1772866858);
+INSERT INTO `dt_roles` VALUES (2, 'user', '普通账号', 1, '不可删除', 1772866849, 1772866855);
 
 -- ----------------------------
 -- Table structure for dt_upload
@@ -197,6 +235,6 @@ CREATE TABLE `dt_user`  (
 -- Records of dt_user
 -- ----------------------------
 INSERT INTO `dt_user` VALUES (1, 'admin', 'admin', '0d3e24d606ccb8b0e1e9d5c11bdfe1ae', 'xump', 1, 1652500366, 0);
-INSERT INTO `dt_user` VALUES (2, 'user', '张三', 'f56fe008fb5908e9bd35a64730cc5226', 'cNc2', 1, 1652506679, 1667956856);
+INSERT INTO `dt_user` VALUES (2, 'user', '张三', 'f56fe008fb5908e9bd35a64730cc5226', 'cNc2', 1, 1652506679, 1772868471);
 
 SET FOREIGN_KEY_CHECKS = 1;

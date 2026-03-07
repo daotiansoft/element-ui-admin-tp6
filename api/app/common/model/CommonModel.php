@@ -6,6 +6,7 @@ use think\Model;
 class CommonModel extends Model
 {
     public $fields = [];
+    protected $schema = [];
 
     public $msg = '';//统一返回消息
     public $data = [];//统一返回数据

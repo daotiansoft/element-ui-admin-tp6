@@ -1,6 +1,8 @@
 <?php
 namespace app\common\model;
 
+use think\model\relation\HasOne;
+
 class UserModel extends CommonModel
 {
     protected $name = 'user';
@@ -12,19 +14,24 @@ class UserModel extends CommonModel
     const STATUS_ON=1;
     const STATUS_OFF=-1;
 
-    public $fields=[
-        'id',
-        'type',
-        'username',
-        'password',
-        'rand_code',
-        'create_time',
-        'update_time',
-        'status'
+    protected $schema = [
+        'id'=>'int',
+        'type'=>'string',
+        'username'=>'string',
+        'password'=>'string',
+        'rand_code'=>'string',
+        'status'=>'int',
+        'create_time'=>'int',
+        'update_time'=>'int'
     ];
 
     public function getItemByUsername($username){
         return $this->where('username','=',$username)->field($this->fields)->find();
+    }
+
+    public function role(): HasOne
+    {
+        return $this->hasOne(RolesModel::class, 'type', 'type');
     }
 
 }

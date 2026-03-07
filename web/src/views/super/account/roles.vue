@@ -13,7 +13,7 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-input v-model="search_form.keyword" placeholder="关键词" />
+          <el-input v-model="search_form.keyword" placeholder="搜索" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submit_search">查询</el-button>
@@ -34,9 +34,10 @@
         >
           <el-table-column type="selection" width="55" />
           <el-table-column prop="id" label="ID" width="80" />
-          <el-table-column prop="role_name" label="角色" width="80" />
-          <el-table-column prop="username" label="账号" />
-          <el-table-column prop="create_time" label="注册时间" width="160" align="center" />
+          <el-table-column prop="type" label="角色标识" />
+          <el-table-column prop="name" label="角色名称" />
+          <el-table-column prop="remark" label="备注" />
+          <el-table-column prop="create_time" label="创建时间" width="160" align="center" />
           <el-table-column label="状态" width="80" align="center">
             <template slot-scope="scope">
               <el-tag v-if="scope.row.status === 1" disable-transitions>正常</el-tag>
@@ -64,16 +65,20 @@
     </div>
     <el-dialog v-loading="loading" title="添加" :visible.sync="addVisible">
       <el-form ref="add_form" :model="add_form">
-        <el-form-item label="角色" label-width="80px">
-          <el-select v-model="add_form.type" placeholder="选择角色">
-            <el-option v-for="(val,key,i) in roles" :key="key" :label="val.name" :value="val.type" />
+        <el-form-item label="角色标识" label-width="80px">
+          <el-input v-model="add_form.type" autocomplete="off" placeholder="请输入角色标识" />
+        </el-form-item>
+        <el-form-item label="角色名称" label-width="80px">
+          <el-input v-model="add_form.name" autocomplete="off" placeholder="请输入角色名称" />
+        </el-form-item>
+        <el-form-item label="备注" label-width="80px">
+          <el-input v-model="add_form.remark" autocomplete="off" placeholder="可空" />
+        </el-form-item>
+        <el-form-item label="状态" label-width="80px">
+          <el-select v-model="add_form.status" placeholder="请选择">
+            <el-option label="启用" :value="1" />
+            <el-option label="停用" :value="-1" />
           </el-select>
-        </el-form-item>
-        <el-form-item label="账号名称" label-width="80px" prop="username">
-          <el-input v-model="add_form.username" autocomplete="off" placeholder="请输入账号名称" />
-        </el-form-item>
-        <el-form-item label="账号密码" label-width="80px" prop="password">
-          <el-input v-model="add_form.password" autocomplete="off" placeholder="密码长度不可小于6个字符" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -84,27 +89,16 @@
 
     <el-dialog v-loading="loading" title="编辑" :visible.sync="editVisible">
       <el-form ref="edit_form" :model="edit_form">
-        <el-form-item label="角色" label-width="80px">
-          <el-select v-model="edit_form.type" placeholder="选择角色">
-            <el-option v-for="(val,key,i) in roles" :key="key" :label="val.name" :value="val.type" />
-          </el-select>
+        <el-form-item label="角色标识" label-width="80px">
+          <el-input v-model="edit_form.type" autocomplete="off" placeholder="请输入角色标识" />
         </el-form-item>
-        <el-form-item label="账号名称" label-width="80px" prop="username">
-          <el-input
-            v-model="edit_form.username"
-            autocomplete="off"
-            :disabled="true"
-            placeholder="请输入账号名称"
-          />
+        <el-form-item label="角色名称" label-width="80px">
+          <el-input v-model="edit_form.name" autocomplete="off" placeholder="请输入角色名称" />
         </el-form-item>
-        <el-form-item label="账号密码" label-width="80px" prop="password">
-          <el-input
-            v-model="edit_form.password"
-            autocomplete="off"
-            placeholder="密码长度不可小于6个字符,留空不修改"
-          />
+        <el-form-item label="备注" label-width="80px">
+          <el-input v-model="edit_form.remark" autocomplete="off" placeholder="可空" />
         </el-form-item>
-        <el-form-item label="状态" label-width="80px" prop="status">
+        <el-form-item label="状态" label-width="80px">
           <el-select v-model="edit_form.status" placeholder="请选择">
             <el-option label="启用" :value="1" />
             <el-option label="停用" :value="-1" />
@@ -135,26 +129,26 @@ export default {
       loading: false,
       addVisible: false,
       add_form: {
-        type: 'user',
-        username: '',
-        password: '',
-        pid: ''
+        type: '',
+        name: '',
+        remark: '',
+        status:1
       },
       editVisible: false,
       edit_form: {
         id: '',
         type: '',
-        username: '',
-        password: '',
-        pid: ''
+        name: '',
+        remark: '',
+        status:1
       },
       multipleSelection: [], // 选中数据
-      roles: []
+      roles: {}
     }
   },
   created() {
     this.load_items()
-    this.load_roles()
+    this.roles = setting.roles
   },
   methods: {
     submit_search() {
@@ -165,7 +159,7 @@ export default {
     load_items() {
       this.loading = true
       this.$store
-        .dispatch('super/member/items', this.search_form)
+        .dispatch('super/roles/items', this.search_form)
         .then(res => {
           const count = res.count
           const items = res.items
@@ -179,18 +173,6 @@ export default {
           this.loading = false
         })
     },
-    load_roles() {
-      this.loading = true
-      this.$store
-        .dispatch('super/roles/all')
-        .then(res => {
-          this.roles = res
-          this.loading = false
-        })
-        .catch(() => {
-          this.loading = false
-        })
-    },
     current_change(page) {
       this.search_form.page = page
       this.load_items()
@@ -198,7 +180,7 @@ export default {
     submit_add() {
       this.loading = true
       this.$store
-        .dispatch('super/member/add', this.add_form)
+        .dispatch('super/roles/add', this.add_form)
         .then(res => {
           this.$message({
             message: res,
@@ -219,7 +201,7 @@ export default {
     submit_edit() {
       this.loading = true
       this.$store
-        .dispatch('super/member/edit', this.edit_form)
+        .dispatch('super/roles/edit', this.edit_form)
         .then(res => {
           this.$message({
             message: res,
@@ -257,7 +239,7 @@ export default {
           })
           this.loading = true
           this.$store
-            .dispatch('super/member/del', { ids: ids })
+            .dispatch('super/roles/del', { ids: ids })
             .then(res => {
               this.$message({
                 message: res,

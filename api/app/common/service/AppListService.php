@@ -16,10 +16,11 @@ declare (strict_types = 1);
 namespace app\common\service;
 
 
+use app\common\basics\Service;
 use app\common\exception\RequestException;
 use app\common\model\AppListModel;
 
-class AppListService
+class AppListService extends Service
 {
     public static function check($params = []){
         ksort($params);
@@ -32,7 +33,7 @@ class AppListService
         }
 
         $appModel = new AppListModel();
-        $appItem = $appModel->where('appid','=',$appid)->field($appModel->fields)->find();
+        $appItem = $appModel->where('appid','=',$appid)->find();
         if(!$appItem || $appItem['status'] != AppListModel::STATUS_ON){
             throw new RequestException('appid不存在');
         }
@@ -51,4 +52,65 @@ class AppListService
         }
         return $appItem;
     }
+
+    public static function lists(array $get): array
+    {
+        self::setSearch([
+            '%like%'   => ['keyword@app_list_model.remark'],
+            '='        => ['status','appid','username@user.username'],
+            'datetime' => ['time@app_list_model.create_time'],
+        ]);
+
+        $model = new AppListModel();
+        $lists = $model
+            ->withJoin('user')
+            ->where(self::$searchWhere)
+            ->order('id desc')
+            ->paginate([
+                'page'      => $get['page']  ?? 1,
+                'list_rows' => $get['pagesize'] ?? 20
+            ])->toArray();
+
+        foreach ($lists['data'] as &$item) {
+            $item['username'] = $item['user']['username'] ?? '';
+            unset($item['user']);
+
+            $item['create_time'] = decode_time($item['create_time']);
+            $item['update_time'] = decode_time($item['update_time']);
+        }
+
+        return ['count'=>$lists['total'], 'items'=>$lists['data']] ?? [];
+    }
+
+    public static function add(array $post): void
+    {
+        AppListModel::create([
+            'uid'          => $post['uid'],
+            'appid'        => $post['appid'],
+            'secret'        => $post['secret'],
+            'status'        => $post['status'] ?? '',
+            'remark'        => $post['remark'] ?? '',
+            'create_time'  => time(),
+            'update_time'  => time()
+        ]);
+    }
+
+    public static function edit(array $post): void
+    {
+        AppListModel::update([
+            'uid'          => $post['uid'],
+            'appid'        => $post['appid'],
+            'secret'        => $post['secret'],
+            'status'        => $post['status'] ?? '',
+            'remark'        => $post['remark'] ?? '',
+            'update_time'  => time()
+        ], ['id'=>intval($post['id'])]);
+    }
+
+    public static function del(array $ids): void
+    {
+        AppListModel::destroy($ids,true);
+    }
+
+
 }

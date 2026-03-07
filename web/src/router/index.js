@@ -106,6 +106,18 @@ export const asyncRoutes = [
         name: '账号',
         component: () => import('@/views/super/account/member'),
         meta: { title: '账号', icon: '' }
+      },
+      {
+        path: 'roles',
+        name: '角色',
+        component: () => import('@/views/super/account/roles'),
+        meta: { title: '角色', icon: '' }
+      },
+      {
+        path: 'apiList',
+        name: '接口',
+        component: () => import('@/views/super/account/appList'),
+        meta: { title: '接口', icon: '' }
       }
     ]
   },

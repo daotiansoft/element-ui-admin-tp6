@@ -48,7 +48,7 @@ class LoginService
             "aud" => UrlUtils::getDomain(), // 接收者
             "iat" => time(), // 发行时间
             "nbf" => time(), // 生效时间
-            "exp" => time() + 3600 * 1, // 过期时间（例如，1小时后过期）
+            "exp" => time() + 3600 * 24 * 7, // 过期时间（例如，1小时后过期）
             "data" => $data
         );
         $jwt = JWT::encode($payload, self::getJwtKey(), 'HS256');
