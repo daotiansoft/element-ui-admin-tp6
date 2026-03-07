@@ -59,9 +59,18 @@ class LoginService
      * 验证授权信息 返回用户信息
      */
     public static function checkAuthorization($jwt_str = ''){
-        $decoded = JWT::decode($jwt_str, new Key(self::getJwtKey(), 'HS256'));
-        $userData = $decoded->data; // 获取用户信息
-        return $userData;
+        if(empty($jwt_str)){
+            throw new RequestException('登陆已失效，请重新登录！');
+        }
+        if(intval(Cache::get('jwt_token_die_' . md5($jwt_str))) > 0){
+            throw new RequestException('登陆已失效，请重新登录！');
+        }
+        try {
+            $decoded = JWT::decode($jwt_str, new Key(self::getJwtKey(), 'HS256'));
+            return $decoded->data; // 获取用户信息
+        }catch (\Exception $e){
+            throw new RequestException('登陆已失效，请重新登录！');
+        }
     }
 
     public static function login($params = []){
@@ -85,6 +94,7 @@ class LoginService
             throw new RequestException('密码不正确，您还可以尝试['.($loginFailMax - $loginFailCount - 1).']次!');
         }
 
+        //清空重试失败次数
         Cache::delete($cacke_key);
 
         $loginLogModel->log($userItem['id'],'',$loginLogModel::STATUS_SUCC,request()->ip());
@@ -101,10 +111,15 @@ class LoginService
 
         $data = [
             'uid'=>$userItem['id'],
-            'username'=>$userItem['username']
+            'username'=>$userItem['username'],
+            'type'=>$userItem['type']
         ];
+        return self::buildAuthorization($data);
+    }
 
-        $auth = self::buildAuthorization($data);
-        return $auth;
+    public static function logout($jwt_token){
+        if(!empty($jwt_token)){
+            Cache::set('jwt_token_die_' . md5($jwt_token),time(),60*60*24);
+        }
     }
 }

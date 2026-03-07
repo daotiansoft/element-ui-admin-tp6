@@ -32,19 +32,3 @@ export function del(data) {
   })
 }
 
-export function balanceIn(data) {
-  return request({
-    url: '/super/member/balanceIn',
-    method: 'post',
-    data
-  })
-}
-
-export function balanceOut(data) {
-  return request({
-    url: '/super/member/balanceOut',
-    method: 'post',
-    data
-  })
-}
-

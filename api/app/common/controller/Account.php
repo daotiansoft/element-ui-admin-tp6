@@ -5,11 +5,13 @@ use app\common\basics\Auth;
 use app\common\model\EditorModel;
 use app\common\model\UploadModel;
 use app\common\model\UserModel;
+use app\common\service\LoginService;
 use think\App;
 
 
 class Account extends Auth
 {
+    protected $notNeedPower = ['info','logout','password','notice','uploadinfo','upload'];
     public function info(){
         $userinfo=array();
         $userinfo['uid']=$this->userItem['id'];
@@ -20,6 +22,8 @@ class Account extends Auth
     }
 
     public function logout(){
+        $token = request()->header('Api-Token');
+        LoginService::logout($token);
         return $this->success("退出成功");
     }
 

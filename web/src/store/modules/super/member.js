@@ -1,4 +1,4 @@
-import { items, add, edit, del, balanceIn, balanceOut } from '@/api/super/member'
+import { items, add, edit, del } from '@/api/super/member'
 import { resetRouter } from '@/router'
 
 const actions = {
@@ -35,27 +35,6 @@ const actions = {
   del({ commit }, data) {
     return new Promise((resolve, reject) => {
       del(data).then(response => {
-        const { msg } = response
-        resolve(msg)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-
-  balanceIn({ commit }, data) {
-    return new Promise((resolve, reject) => {
-      balanceIn(data).then(response => {
-        const { msg } = response
-        resolve(msg)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-  balanceOut({ commit }, data) {
-    return new Promise((resolve, reject) => {
-      balanceOut(data).then(response => {
         const { msg } = response
         resolve(msg)
       }).catch(error => {

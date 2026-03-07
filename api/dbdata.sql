@@ -11,118 +11,11 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 05/09/2023 13:59:30
+ Date: 07/03/2026 10:42:19
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
--- ----------------------------
--- Table structure for dt_activation_cate
--- ----------------------------
-DROP TABLE IF EXISTS `dt_activation_cate`;
-CREATE TABLE `dt_activation_cate`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `desc` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
-  `create_time` int(20) NULL DEFAULT 0,
-  `update_time` int(20) NULL DEFAULT 0,
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `name`(`name`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '激活码分类' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of dt_activation_cate
--- ----------------------------
-INSERT INTO `dt_activation_cate` VALUES (1, '数据比对', '测试用的', 1636805913, 1636805973);
-
--- ----------------------------
--- Table structure for dt_activation_code
--- ----------------------------
-DROP TABLE IF EXISTS `dt_activation_code`;
-CREATE TABLE `dt_activation_code`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `cate_id` int(20) NULL DEFAULT 0 COMMENT '分类ID',
-  `code` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
-  `time` int(20) NULL DEFAULT 0 COMMENT '时长',
-  `amount` int(20) NULL DEFAULT 0 COMMENT '次数',
-  `desc` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
-  `create_time` int(20) NULL DEFAULT 0,
-  `active_time` int(20) NULL DEFAULT 0 COMMENT '激活时间',
-  `active_uid` int(20) NULL DEFAULT 0 COMMENT '激活用户',
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `code`(`code`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '激活码' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for dt_article_cate
--- ----------------------------
-DROP TABLE IF EXISTS `dt_article_cate`;
-CREATE TABLE `dt_article_cate`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `status` tinyint(1) NULL DEFAULT NULL COMMENT '状态 1正常 -1隐藏',
-  `create_time` int(20) NULL DEFAULT 0,
-  `update_time` int(20) NULL DEFAULT 0,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文章分类' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of dt_article_cate
--- ----------------------------
-INSERT INTO `dt_article_cate` VALUES (1, '分类一', '666', 1, 1652526653, 1652526653);
-INSERT INTO `dt_article_cate` VALUES (2, '分类二', '', 1, 1652526661, 1652527025);
-
--- ----------------------------
--- Table structure for dt_article_list
--- ----------------------------
-DROP TABLE IF EXISTS `dt_article_list`;
-CREATE TABLE `dt_article_list`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `cate_id` int(20) NULL DEFAULT NULL,
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-  `create_time` int(20) NULL DEFAULT NULL,
-  `update_time` int(20) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文章列表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for dt_balance_log
--- ----------------------------
-DROP TABLE IF EXISTS `dt_balance_log`;
-CREATE TABLE `dt_balance_log`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL COMMENT '类型',
-  `user_id` int(20) NULL DEFAULT 0,
-  `money` decimal(10, 2) NULL DEFAULT 0.00 COMMENT '金额',
-  `balance` decimal(10, 2) NULL DEFAULT 0.00 COMMENT '余额',
-  `desc` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '' COMMENT '备注',
-  `create_time` int(20) NULL DEFAULT 0,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '余额变动记录' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for dt_balance_withdrawal
--- ----------------------------
-DROP TABLE IF EXISTS `dt_balance_withdrawal`;
-CREATE TABLE `dt_balance_withdrawal`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_id` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '' COMMENT '流水号',
-  `user_id` int(20) NULL DEFAULT 0,
-  `money` decimal(10, 2) NULL DEFAULT 0.00 COMMENT '提现金额',
-  `pay` decimal(10, 2) NULL DEFAULT 0.00 COMMENT '实付金额',
-  `rate` decimal(10, 2) NULL DEFAULT 0.00 COMMENT '手续费',
-  `account` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '' COMMENT '收款账号',
-  `account_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL COMMENT '收款账号名称',
-  `status` tinyint(1) NULL DEFAULT 0 COMMENT '状态',
-  `desc` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
-  `create_time` int(20) NULL DEFAULT 0,
-  `auth_time` int(20) NULL DEFAULT 0,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '余额提现' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for dt_config
@@ -139,16 +32,17 @@ CREATE TABLE `dt_config`  (
   `sort` int(10) NULL DEFAULT 50,
   `show` tinyint(1) NULL DEFAULT 1 COMMENT '是否显示 1是-1否',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '配置' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '配置' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of dt_config
 -- ----------------------------
-INSERT INTO `dt_config` VALUES (1, 'site_name', 'text', '网站名称', '测试网站名称', '站点名称', NULL, 10, 1);
-INSERT INTO `dt_config` VALUES (2, 'site_status', 'select', '网站停用', '1', '站点关闭后，用户无法登录', '[{\"id\":1,\"name\":\"正常\"},{\"id\":2,\"name\":\"停用\"}]', 10, 1);
-INSERT INTO `dt_config` VALUES (3, 'logo', 'image', 'LOGO', '[domain]/storage/topic/20230523/c68c18dda07ac88b4b6e3f609a418ba8.png', NULL, NULL, 50, 1);
-INSERT INTO `dt_config` VALUES (4, 'site_stop_msg', 'text', '站点停用提示', '系统维护中...', NULL, NULL, 10, 1);
+INSERT INTO `dt_config` VALUES (1, 'site_name', 'text', '站点名称', '管理面板', '', NULL, 10, 1);
+INSERT INTO `dt_config` VALUES (2, 'site_status', 'select', '是否闭站', '1', '站点关闭后，用户无法登录', '[{\"id\":1,\"name\":\"否\"},{\"id\":2,\"name\":\"是\"}]', 10, 1);
+INSERT INTO `dt_config` VALUES (3, 'logo', 'image', 'LOGO', '[domain]/storage/topic/20230523/c68c18dda07ac88b4b6e3f609a418ba8.png', NULL, NULL, 50, -1);
+INSERT INTO `dt_config` VALUES (4, 'site_stop_msg', 'text', '闭站提示', '系统维护中...', NULL, NULL, 10, 1);
 INSERT INTO `dt_config` VALUES (5, 'demo_textarea', 'textarea', '多行文本', NULL, NULL, NULL, 1, -1);
+INSERT INTO `dt_config` VALUES (6, 'captcha_status', 'select', '登录验证码', '2', NULL, '[{\"id\":1,\"name\":\"启用\"},{\"id\":2,\"name\":\"关闭\"}]', 50, 1);
 
 -- ----------------------------
 -- Table structure for dt_editor
@@ -181,33 +75,74 @@ CREATE TABLE `dt_login_log`  (
   `desc` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
   `ip` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '登录记录' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 38 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '登录记录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of dt_login_log
 -- ----------------------------
 INSERT INTO `dt_login_log` VALUES (1, 1, 'api', 1693893501, 1, '登录成功', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (2, 1, '', 1772786856, 2, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (3, 1, '', 1772786862, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (4, 1, '', 1772786964, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (5, 1, '', 1772786983, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (6, 1, '', 1772787015, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (7, 1, '', 1772787059, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (8, 1, '', 1772787094, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (9, 1, '', 1772787120, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (10, 1, '', 1772787169, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (11, 1, '', 1772787215, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (12, 1, '', 1772787231, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (13, 1, '', 1772787276, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (14, 1, '', 1772787309, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (15, 1, '', 1772787348, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (16, 1, '', 1772787379, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (17, 1, '', 1772787395, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (18, 1, '', 1772787425, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (19, 1, '', 1772787456, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (20, 1, '', 1772787490, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (21, 1, '', 1772787507, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (22, 1, '', 1772787516, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (23, 1, '', 1772787549, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (24, 1, '', 1772787558, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (25, 1, '', 1772787571, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (26, 1, '', 1772787584, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (27, 1, '', 1772787595, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (28, 1, '', 1772846672, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (29, 1, '', 1772846764, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (30, 1, '', 1772848581, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (31, 1, '', 1772848651, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (32, 1, '', 1772849985, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (33, 1, '', 1772850428, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (34, 1, '', 1772850457, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (35, 1, '', 1772850831, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (36, 1, '', 1772851277, 2, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (37, 1, '', 1772851285, 1, '', '127.0.0.1');
 
 -- ----------------------------
--- Table structure for dt_token
+-- Table structure for dt_perms
 -- ----------------------------
-DROP TABLE IF EXISTS `dt_token`;
-CREATE TABLE `dt_token`  (
+DROP TABLE IF EXISTS `dt_perms`;
+CREATE TABLE `dt_perms`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(20) NULL DEFAULT 0,
-  `token` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
-  `device` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL COMMENT '设备',
-  `create_time` int(20) NULL DEFAULT 0,
-  `expire_time` int(20) NULL DEFAULT 0,
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `uid`(`uid`, `device`) USING BTREE,
-  UNIQUE INDEX `token`(`token`, `device`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '登录token' ROW_FORMAT = Dynamic;
+  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+  `type` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `action` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `status` tinyint(1) NULL DEFAULT 1,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '权限' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of dt_token
+-- Records of dt_perms
 -- ----------------------------
-INSERT INTO `dt_token` VALUES (1, 1, '2ae1e43653f0ee1e76500e878977bbb0', 'api', 1693893501, 1694498301);
+INSERT INTO `dt_perms` VALUES (1, '测试', 'admin', 'webapi/index/test', 1);
+INSERT INTO `dt_perms` VALUES (2, '配置', 'admin', 'super/config/items', 1);
+INSERT INTO `dt_perms` VALUES (3, '配置', 'admin', 'super/config/save', 1);
+INSERT INTO `dt_perms` VALUES (4, '富文本', 'admin', 'super/editor/items', 1);
+INSERT INTO `dt_perms` VALUES (5, '富文本', 'admin', 'super/editor/save', 1);
+INSERT INTO `dt_perms` VALUES (6, '账号管理', 'admin', 'super/member/items', 1);
+INSERT INTO `dt_perms` VALUES (7, '账号管理', 'admin', 'super/member/add', 1);
+INSERT INTO `dt_perms` VALUES (8, '账号管理', 'admin', 'super/member/edit', 1);
+INSERT INTO `dt_perms` VALUES (9, '账号管理', 'admin', 'super/member/del', 1);
 
 -- ----------------------------
 -- Table structure for dt_upload
@@ -234,14 +169,9 @@ CREATE TABLE `dt_user`  (
   `username` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
   `password` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
   `rand_code` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL COMMENT '随机码',
-  `balance` decimal(10, 2) NULL DEFAULT 0.00 COMMENT '余额',
+  `status` tinyint(1) NULL DEFAULT 1 COMMENT '状态1正常2停用',
   `create_time` int(20) NULL DEFAULT 0,
   `update_time` int(20) NULL DEFAULT 0,
-  `vip_time` int(20) NULL DEFAULT 0 COMMENT '会员时间',
-  `status` tinyint(1) NULL DEFAULT 1 COMMENT '状态1正常2停用',
-  `pid` int(10) NULL DEFAULT 0 COMMENT '邀请人',
-  `activation_data` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '' COMMENT '激活状态',
-  `rate_balance_withdrawal` decimal(10, 2) NULL DEFAULT 0.00 COMMENT '提现费率',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `username`(`username`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '账号表' ROW_FORMAT = Dynamic;
@@ -249,7 +179,7 @@ CREATE TABLE `dt_user`  (
 -- ----------------------------
 -- Records of dt_user
 -- ----------------------------
-INSERT INTO `dt_user` VALUES (1, 'admin', 'admin', '0d3e24d606ccb8b0e1e9d5c11bdfe1ae', 'xump', 0.00, 1652500366, 0, 0, 1, 0, '', 0.00);
-INSERT INTO `dt_user` VALUES (2, 'user', '张三', 'f56fe008fb5908e9bd35a64730cc5226', 'cNc2', 9900.00, 1652506679, 1667956856, 0, 1, 0, '', 0.02);
+INSERT INTO `dt_user` VALUES (1, 'admin', 'admin', '0d3e24d606ccb8b0e1e9d5c11bdfe1ae', 'xump', 1, 1652500366, 0);
+INSERT INTO `dt_user` VALUES (2, 'user', '张三', 'f56fe008fb5908e9bd35a64730cc5226', 'cNc2', 1, 1652506679, 1667956856);
 
 SET FOREIGN_KEY_CHECKS = 1;

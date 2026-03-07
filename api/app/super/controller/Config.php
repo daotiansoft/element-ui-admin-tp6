@@ -2,18 +2,14 @@
 //下级
 namespace app\super\controller;
 
-use app\BaseController;
+use app\common\basics\Auth;
 use app\common\model\ConfigModel;
-use app\common\model\UserModel;
 use think\App;
-use think\exception\ValidateException;
 
 
-class Config extends BaseController
+class Config extends Auth
 {
 
-    //验证登录
-    protected $middleware = [\app\middleware\LoginAuth::class];
 
     public function items(){
         $model = new ConfigModel();

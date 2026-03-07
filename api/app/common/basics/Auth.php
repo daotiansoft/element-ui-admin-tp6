@@ -17,6 +17,7 @@ namespace app\common\basics;
 
 use app\BaseController;
 use app\common\exception\NotAuthException;
+use app\common\model\PermsModel;
 use app\common\model\UserModel;
 use app\common\service\LoginService;
 use think\App;
@@ -109,20 +110,27 @@ abstract class Auth extends BaseController
      */
     protected function checkPower(): bool
     {
-        $prefixName = config('project.backend_entrance');
-
-        $requestUrl = lcfirst(str_replace($prefixName, '', request()->baseUrl()));
-        $requestUrl = ltrim($requestUrl, '/');
-        $requestUrl = ($requestUrl == 'index' || !$requestUrl) ? 'index/index' : $requestUrl;
-
-        if (in_array(request()->action(), $this->notNeedLogin) ||
-            in_array(request()->action(), $this->notNeedPower) ||
-            $requestUrl === 'index/index' ||
-            $this->userItem['id'] === 1)
-        {
+        if (in_array(request()->action(), $this->notNeedPower)) {
             return true;
         }
+        if(!isset($this->userItem['type'])){
+            return false;
+        }
+        $requestUrl = lcfirst( request()->baseUrl());
+        $requestUrl = ltrim($requestUrl, '/');
+        $requestUrl = strtolower(($requestUrl == 'index' || !$requestUrl) ? 'index/index' : $requestUrl);
 
-
+        $permsModel = new PermsModel();
+        $perms = array_unique($permsModel->field(true)
+            ->whereIn('type', $this->userItem['type'])
+            ->where(['status'=>1])
+            ->column('action'));
+        $perms = array_map(function ($p) {
+            return strtolower($p);
+        }, $perms);
+        if (!in_array(strtolower($requestUrl), $perms)) {
+            throw new NotAuthException('无权限['.$requestUrl.']');
+        }
+        return true;
     }
 }

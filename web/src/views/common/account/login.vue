@@ -9,7 +9,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">登 录</h3>
+        <h3 class="title">{{site_name}}</h3>
       </div>
 
       <el-form-item prop="username">
@@ -47,7 +47,7 @@
           />
         </span>
       </el-form-item>
-      <el-form-item prop="captcha">
+      <el-form-item prop="captcha" v-if="captcha_status == 1">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
@@ -97,13 +97,6 @@ export default {
         callback()
       }
     }
-    const validateCaptcha = (rule, value, callback) => {
-      if (value.length <= 0) {
-        callback(new Error('请输入验证码'))
-      } else {
-        callback()
-      }
-    }
     return {
       loginForm: {
         username: '',
@@ -117,15 +110,15 @@ export default {
         ],
         password: [
           { required: true, trigger: 'blur', validator: validatePassword }
-        ],
-        captcha: [
-          { required: true, trigger: 'blur', validator: validateCaptcha }
         ]
       },
       loading: false,
       passwordType: 'password',
       redirect: undefined,
-      captcha_image: ''
+      captcha_image: '',
+
+      site_name:'',
+      captcha_status:2
     }
   },
   watch: {
@@ -137,7 +130,7 @@ export default {
     }
   },
   created() {
-    this.captcha()
+    this.init()
   },
 
   methods: {
@@ -180,7 +173,28 @@ export default {
           this.loading = false
         })
         .catch(() => { })
-    }
+    },
+    init() {
+      this.loading = true
+      this.$store
+        .dispatch('user/init')
+        .then((data) => {
+          this.site_name = data.site_name
+          this.captcha_status = data.captcha_status
+          this.loading = false
+
+          if(data.site_status  != 1){
+            this.$message({
+                message: data.site_stop_msg,
+                type: 'error'
+              })
+          }
+          if(data.captcha_status == 1){
+            this.captcha()
+          }
+        })
+        .catch(() => { })
+    },
   }
 }
 </script>

@@ -5,9 +5,8 @@
  * @param $password
  * @return string
  */
-function get_password($password,$rand_code){
-    $password=md5($rand_code.md5($password));
-    return $password;
+function get_password($password, $rand_code){
+    return md5($rand_code . md5($password));
 }
 
 /**
@@ -17,10 +16,7 @@ function get_password($password,$rand_code){
  * @return false|string
  */
 function decode_time($time,$format='Y-m-d H:i:s'){
-    if($time<=0){
-        return '-';
-    }
-    return date($format,$time);
+    return $time <= 0 ? '-' : date($format, $time);
 }
 
 /**
@@ -33,8 +29,8 @@ function get_rand_str($length){
     $str = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     $len = strlen($str)-1;
     $randstr = '';
-    for ($i=0;$i<$length;$i++) {
-        $num=mt_rand(0,$len);
+    for ($i = 0; $i < $length; $i++) {
+        $num = mt_rand(0, $len);
         $randstr .= $str[$num];
     }
     return $randstr;
@@ -44,7 +40,7 @@ function get_rand_str($length){
  * 将html中的域名编码替换
  * @param $content
  */
-function html_domain_encode($content,$url=''){
+function html_domain_encode($content,$url = ''){
     if(empty($url)){
         $url = request()->domain();
     }
@@ -54,7 +50,7 @@ function html_domain_encode($content,$url=''){
  * 将html中的域名解码替换
  * @param $content
  */
-function html_domain_decode($content,$url=''){
+function html_domain_decode($content,$url = ''){
     if(empty($url)){
         $url = request()->domain();
     }

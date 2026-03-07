@@ -2,19 +2,13 @@
 //下级
 namespace app\super\controller;
 
-use app\BaseController;
-use app\common\model\BalanceLogModel;
+use app\common\basics\Auth;
 use app\common\model\UserModel;
-use app\common\validate\UserValidate;
 use think\App;
 
 
-class Member extends BaseController
+class Member extends Auth
 {
-
-    //验证登录
-    protected $middleware = [\app\middleware\LoginAuth::class];
-
     public function items(){
         $model = new UserModel();
 

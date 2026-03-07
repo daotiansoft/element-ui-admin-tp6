@@ -103,87 +103,12 @@ export const asyncRoutes = [
     children: [
       {
         path: 'member',
-        name: '会员账号',
+        name: '账号',
         component: () => import('@/views/super/account/member'),
-        meta: { title: '会员账号', icon: '' }
-      },
-      {
-        path: 'balanceLog',
-        name: '流水记录',
-        component: () => import('@/views/super/account/balanceLog'),
-        meta: { title: '流水记录', icon: '' }
-      },
-      {
-        path: 'balanceWithDrawal',
-        name: '提现管理',
-        component: () => import('@/views/super/account/balanceWithdrawal'),
-        meta: { title: '提现管理', icon: '' }
+        meta: { title: '账号', icon: '' }
       }
     ]
   },
-  {
-    path: '/super/activation',
-    component: Layout,
-    // redirect: '/activation',
-    meta: { title: '激活码管理', icon: 'el-icon-document', roles: ['admin'] },
-    children: [
-      {
-        path: 'cate',
-        name: '分类',
-        component: () => import('@/views/super/activation/cate'),
-        meta: { title: '分类', icon: '' }
-      },
-      {
-        path: 'code',
-        name: '激活码',
-        component: () => import('@/views/super/activation/code'),
-        meta: { title: '激活码', icon: '' }
-      }
-    ]
-  },
-  {
-    path: '/super/article',
-    component: Layout,
-    // redirect: '/activation',
-    meta: { title: '文章管理', icon: 'el-icon-edit', roles: ['admin'] },
-    children: [
-      {
-        path: 'cate',
-        name: '文章分类',
-        component: () => import('@/views/super/article/cate'),
-        meta: { title: '文章分类', icon: '' }
-      },
-      {
-        path: 'list',
-        name: '文章列表',
-        component: () => import('@/views/super/article/list'),
-        meta: { title: '文章列表', icon: '' }
-      }
-    ]
-  },
-
-  // 用户端
-  {
-    path: '/user/account/balanceLog',
-    component: Layout,
-    // redirect: '/user/balance_log',
-    meta: { title: '我的财务', icon: 'el-icon-document', roles: ['user'] },
-    children: [
-      {
-        path: 'balanceLog',
-        name: '流水记录',
-        component: () => import('@/views/user/account/balanceLog'),
-        meta: { title: '流水记录', icon: '' }
-      },
-      {
-        path: 'balanceWithDrawal',
-        name: '余额提现',
-        component: () => import('@/views/user/account/balanceWithdrawal'),
-        meta: { title: '余额提现', icon: '' }
-      }
-    ]
-  },
-
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
