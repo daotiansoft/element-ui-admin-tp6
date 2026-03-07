@@ -11,11 +11,28 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 07/03/2026 10:42:19
+ Date: 07/03/2026 11:17:43
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for dt_app_list
+-- ----------------------------
+DROP TABLE IF EXISTS `dt_app_list`;
+CREATE TABLE `dt_app_list`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(10) NULL DEFAULT 0,
+  `appid` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+  `secret` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+  `status` tinyint(1) NULL DEFAULT 1,
+  `remark` varchar(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+  `create_time` int(10) NULL DEFAULT 0,
+  `update_time` int(10) NULL DEFAULT 0,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `appid`(`appid`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for dt_config
