@@ -18,7 +18,7 @@
           <router-link to="/">
             <el-dropdown-item> 您好,{{ name }} </el-dropdown-item>
           </router-link>
-          <router-link to="/user/password">
+          <router-link to="/common/account/password">
             <el-dropdown-item> 修改密码 </el-dropdown-item>
           </router-link>
           <el-dropdown-item divided @click.native="logout">
