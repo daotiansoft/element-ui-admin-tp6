@@ -61,12 +61,14 @@ export const constantRoutes = [
     path: '/',
     component: Layout,
     redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      name: '控制台',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: '控制台', icon: 'dashboard' }
-    }]
+    children: [
+      {
+        path: 'dashboard',
+        name: '控制台',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: '控制台', icon: 'dashboard' }
+      }
+    ]
   }
 ]
 
@@ -114,6 +116,12 @@ export const asyncRoutes = [
         meta: { title: '角色', icon: '' }
       },
       {
+        path: 'perms',
+        name: '权限',
+        component: () => import('@/views/super/account/perms'),
+        meta: { title: '权限', icon: '' }
+      },
+      {
         path: 'apiList',
         name: '接口',
         component: () => import('@/views/super/account/appList'),
@@ -125,12 +133,12 @@ export const asyncRoutes = [
   { path: '*', redirect: '/404', hidden: true }
 ]
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-
-})
+const createRouter = () =>
+  new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
+  })
 
 const router = createRouter()
 
