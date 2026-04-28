@@ -111,7 +111,6 @@ class Service
      */
     protected static function setSearch(array $search,array $params): array
     {
-        $params = array_map('trim', $params);
         if (empty($search)) {
             return [];
         }
@@ -203,10 +202,10 @@ class Service
                         if (is_array($params[$key])) {
                             $start = $params[$key][0];
                             $end = $params[$key][1];
-                            $where[] = [$val, '>=', strtotime($start)];
-                            $where[] = [$val, '<=', strtotime($end)];
+                            $where[] = [$val, '>=', $start / 1000];
+                            $where[] = [$val, '<=', $end / 1000];
                         } else {
-                            $where[] = [$val, '>=', strtotime($params[$key])];
+                            $where[] = [$val, '>=', $params[$key] / 1000];
                         }
                     }
                     break;

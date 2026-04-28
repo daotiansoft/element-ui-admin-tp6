@@ -3,28 +3,16 @@
     <el-form ref="form" label-width="100px" style="max-width: 1000px">
       <el-form-item v-for="item in items" :label="item.name">
         <el-input v-if="item.type == 'text'" v-model="item.content" />
-        <el-input
-          v-if="item.type == 'textarea'"
-          v-model="item.content"
-          type="textarea"
-        />
+        <el-input v-if="item.type == 'textarea'" v-model="item.content" type="textarea" />
         <el-input v-if="item.type == 'image'" v-model="item.content">
-          <SingleImageUpload
-            slot="append"
-            @input="
-              (val) => {
-                set_image(val, item.key)
-              }
-            "
-          />
+          <SingleImageUpload slot="append" @input="
+            (val) => {
+              set_image(val, item.key)
+            }
+          " />
         </el-input>
         <el-select v-if="item.type == 'select'" v-model="item.content">
-          <el-option
-            v-for="option in item.params"
-            :key="option.id"
-            :label="option.name"
-            :value="option.id"
-          />
+          <el-option v-for="option in item.params" :key="option.id" :label="option.name" :value="option.id" />
         </el-select>
         <div style="font-size: 12px; color: #909399">
           {{ item.placeholder }}
@@ -56,7 +44,7 @@ export default {
     this.load_items()
   },
   methods: {
-    onSubmit: function() {
+    onSubmit: function () {
       this.loading = true
       this.$store
         .dispatch('super/config/save', this.items)
@@ -71,7 +59,7 @@ export default {
           this.loading = false
         })
     },
-    load_items: function() {
+    load_items: function () {
       this.loading = true
       this.$store
         .dispatch('super/config/items')
@@ -79,9 +67,9 @@ export default {
           this.items = res
           this.loading = false
         })
-        .catch(() => {})
+        .catch(() => { })
     },
-    set_image: function(url, key) {
+    set_image: function (url, key) {
       this.items.map((item) => {
         if (item.key == key) {
           item.content = url

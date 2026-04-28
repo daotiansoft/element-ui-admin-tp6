@@ -45,9 +45,6 @@ class UserService extends Service
         foreach ($lists['data'] as &$item) {
             $item['role_name'] = $item['role']['name'] ?? '';
             unset($item['role']);
-
-            $item['create_time'] = decode_time($item['create_time']);
-            $item['update_time'] = decode_time($item['update_time']);
         }
 
         return ['count'=>$lists['total'], 'items'=>$lists['data']] ?? [];

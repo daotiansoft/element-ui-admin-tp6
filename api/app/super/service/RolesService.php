@@ -39,12 +39,7 @@ class RolesService extends Service
                 'list_rows' => $get['pagesize'] ?? 20
             ])->toArray();
 
-        foreach ($lists['data'] as &$item) {
-            $item['create_time'] = decode_time($item['create_time']);
-            $item['update_time'] = decode_time($item['update_time']);
-        }
-
-        return ['count'=>$lists['total'], 'items'=>$lists['data'],'where'=>self::$searchWhere] ?? [];
+        return ['count'=>$lists['total'], 'items'=>$lists['data']] ?? [];
     }
 
     public static function all(): array

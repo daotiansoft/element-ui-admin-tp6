@@ -5,7 +5,7 @@
         <el-form-item>
           <el-select v-model="search_form.type" placeholder="选择角色">
             <el-option label="所有角色" value="" />
-            <el-option v-for="(val, key, i) in roles" :key="key" :label="val.name" :value="val.type" />
+            <el-option v-for="(val, key) in roles" :key="key" :label="val.name" :value="val.type" />
           </el-select>
         </el-form-item>
         <el-form-item>

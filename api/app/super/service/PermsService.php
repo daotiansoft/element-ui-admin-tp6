@@ -42,7 +42,7 @@ class PermsService extends Service
             $item['type_name'] = $item['role']['name'] ?? '';
             unset($item['role']);
         }
-        return ['count'=>$lists['total'], 'items'=>$lists['data'],'where'=>self::$searchWhere] ?? [];
+        return ['count'=>$lists['total'], 'items'=>$lists['data']] ?? [];
     }
 
     public static function add(array $post): void

@@ -3,14 +3,8 @@
     <div class="search-block">
       <el-form :inline="true" :model="search_form">
         <el-form-item>
-          <el-date-picker
-            v-model="search_form.time"
-            type="datetimerange"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          />
+          <el-date-picker v-model="search_form.time" type="datetimerange" value-format="timestamp" range-separator="至"
+            start-placeholder="开始日期" end-placeholder="结束日期" />
         </el-form-item>
         <el-form-item>
           <el-input v-model="search_form.keyword" placeholder="搜索" />
@@ -25,19 +19,18 @@
 
     <div class="data-list">
       <template>
-        <el-table
-          v-loading="loading"
-          :data="items"
-          style="width: 100%"
-          empty-text="暂无数据"
-          @selection-change="handleSelectionChange"
-        >
+        <el-table v-loading="loading" :data="items" style="width: 100%" empty-text="暂无数据"
+          @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" />
           <el-table-column prop="id" label="ID" width="80" />
           <el-table-column prop="type" label="角色标识" />
           <el-table-column prop="name" label="角色名称" />
           <el-table-column prop="remark" label="备注" />
-          <el-table-column prop="create_time" label="创建时间" width="160" align="center" />
+          <el-table-column label="创建时间" width="160" align="center">
+            <template slot-scope="scope">
+              <div>{{ moment(scope.row.create_time * 1000).format('YYYY-MM-DD HH:mm:ss') }}</div>
+            </template>
+          </el-table-column>
           <el-table-column label="状态" width="80" align="center">
             <template slot-scope="scope">
               <el-tag v-if="scope.row.status === 1" disable-transitions>正常</el-tag>
@@ -53,15 +46,8 @@
       </template>
     </div>
     <div class="page-block" style="text-align: center;margin: 10px 0;">
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        :total="total"
-        :small="true"
-        :hide-on-single-page="true"
-        :page-size="search_form.pagesize"
-        @current-change="current_change"
-      />
+      <el-pagination background layout="prev, pager, next" :total="total" :small="true" :hide-on-single-page="true"
+        :page-size="search_form.pagesize" @current-change="current_change" />
     </div>
     <el-dialog v-loading="loading" title="添加" :visible.sync="addVisible">
       <el-form ref="add_form" :model="add_form">
@@ -115,6 +101,7 @@
 
 <script>
 import setting from '@/settings.js'
+import moment from 'moment'
 export default {
   data() {
     return {
@@ -132,7 +119,7 @@ export default {
         type: '',
         name: '',
         remark: '',
-        status:1
+        status: 1
       },
       editVisible: false,
       edit_form: {
@@ -140,7 +127,7 @@ export default {
         type: '',
         name: '',
         remark: '',
-        status:1
+        status: 1
       },
       multipleSelection: [], // 选中数据
       roles: {}
@@ -151,6 +138,7 @@ export default {
     this.roles = setting.roles
   },
   methods: {
+    moment,
     submit_search() {
       this.search_form.page = 1
       this.load_items()
@@ -252,7 +240,7 @@ export default {
               this.loading = false
             })
         })
-        .catch(() => {})
+        .catch(() => { })
     }
   }
 }

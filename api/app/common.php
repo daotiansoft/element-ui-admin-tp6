@@ -10,16 +10,6 @@ function get_password($password, $rand_code){
 }
 
 /**
- * 时间戳格式化
- * @param $time
- * @param string $format
- * @return false|string
- */
-function decode_time($time,$format='Y-m-d H:i:s'){
-    return $time <= 0 ? '-' : date($format, $time);
-}
-
-/**
  * 生成随机字符串
  * @param $length
  * @return string

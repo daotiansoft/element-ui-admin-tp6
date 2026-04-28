@@ -74,12 +74,9 @@ class AppListService extends Service
         foreach ($lists['data'] as &$item) {
             $item['username'] = $item['user']['username'] ?? '';
             unset($item['user']);
-
-            $item['create_time'] = decode_time($item['create_time']);
-            $item['update_time'] = decode_time($item['update_time']);
         }
 
-        return ['count'=>$lists['total'], 'items'=>$lists['data'],'where'=>self::$searchWhere] ?? [];
+        return ['count'=>$lists['total'], 'items'=>$lists['data']] ?? [];
     }
 
     public static function add(array $post): void

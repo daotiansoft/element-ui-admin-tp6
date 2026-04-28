@@ -3,14 +3,8 @@
     <div class="search-block">
       <el-form :inline="true" :model="search_form">
         <el-form-item>
-          <el-date-picker
-            v-model="search_form.time"
-            type="datetimerange"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          />
+          <el-date-picker v-model="search_form.time" type="datetimerange" value-format="timestamp" range-separator="至"
+            start-placeholder="开始日期" end-placeholder="结束日期" />
         </el-form-item>
         <el-form-item>
           <el-input v-model="search_form.keyword" placeholder="关键词" />
@@ -25,18 +19,17 @@
 
     <div class="data-list">
       <template>
-        <el-table
-          v-loading="loading"
-          :data="items"
-          style="width: 100%"
-          empty-text="暂无数据"
-          @selection-change="handleSelectionChange"
-        >
+        <el-table v-loading="loading" :data="items" style="width: 100%" empty-text="暂无数据"
+          @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" />
           <el-table-column prop="id" label="ID" width="80" />
           <el-table-column prop="role_name" label="角色" width="80" />
           <el-table-column prop="username" label="账号" />
-          <el-table-column prop="create_time" label="注册时间" width="160" align="center" />
+          <el-table-column label="注册时间" width="160" align="center">
+            <template slot-scope="scope">
+              <div>{{ moment(scope.row.create_time * 1000).format('YYYY-MM-DD HH:mm:ss') }}</div>
+            </template>
+          </el-table-column>
           <el-table-column label="状态" width="80" align="center">
             <template slot-scope="scope">
               <el-tag v-if="scope.row.status === 1" disable-transitions>正常</el-tag>
@@ -52,21 +45,14 @@
       </template>
     </div>
     <div class="page-block" style="text-align: center;margin: 10px 0;">
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        :total="total"
-        :small="true"
-        :hide-on-single-page="true"
-        :page-size="search_form.pagesize"
-        @current-change="current_change"
-      />
+      <el-pagination background layout="prev, pager, next" :total="total" :small="true" :hide-on-single-page="true"
+        :page-size="search_form.pagesize" @current-change="current_change" />
     </div>
     <el-dialog v-loading="loading" title="添加" :visible.sync="addVisible">
       <el-form ref="add_form" :model="add_form">
         <el-form-item label="角色" label-width="80px">
           <el-select v-model="add_form.type" placeholder="选择角色">
-            <el-option v-for="(val,key,i) in roles" :key="key" :label="val.name" :value="val.type" />
+            <el-option v-for="(val, key) in roles" :key="key" :label="val.name" :value="val.type" />
           </el-select>
         </el-form-item>
         <el-form-item label="账号名称" label-width="80px" prop="username">
@@ -86,23 +72,14 @@
       <el-form ref="edit_form" :model="edit_form">
         <el-form-item label="角色" label-width="80px">
           <el-select v-model="edit_form.type" placeholder="选择角色">
-            <el-option v-for="(val,key,i) in roles" :key="key" :label="val.name" :value="val.type" />
+            <el-option v-for="(val, key) in roles" :key="key" :label="val.name" :value="val.type" />
           </el-select>
         </el-form-item>
         <el-form-item label="账号名称" label-width="80px" prop="username">
-          <el-input
-            v-model="edit_form.username"
-            autocomplete="off"
-            :disabled="true"
-            placeholder="请输入账号名称"
-          />
+          <el-input v-model="edit_form.username" autocomplete="off" :disabled="true" placeholder="请输入账号名称" />
         </el-form-item>
         <el-form-item label="账号密码" label-width="80px" prop="password">
-          <el-input
-            v-model="edit_form.password"
-            autocomplete="off"
-            placeholder="密码长度不可小于6个字符,留空不修改"
-          />
+          <el-input v-model="edit_form.password" autocomplete="off" placeholder="密码长度不可小于6个字符,留空不修改" />
         </el-form-item>
         <el-form-item label="状态" label-width="80px" prop="status">
           <el-select v-model="edit_form.status" placeholder="请选择">
@@ -120,7 +97,7 @@
 </template>
 
 <script>
-import setting from '@/settings.js'
+import moment from 'moment'
 export default {
   data() {
     return {
@@ -157,6 +134,7 @@ export default {
     this.load_roles()
   },
   methods: {
+    moment,
     submit_search() {
       this.search_form.page = 1
       this.load_items()
@@ -270,7 +248,7 @@ export default {
               this.loading = false
             })
         })
-        .catch(() => {})
+        .catch(() => { })
     }
   }
 }
