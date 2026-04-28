@@ -13,62 +13,77 @@
 // +----------------------------------------------------------------------
 declare (strict_types = 1);
 
-namespace app\common\service;
+namespace app\super\service;
 
 
 use app\common\basics\Service;
-use app\common\model\PermsModel;
+use app\common\model\RolesModel;
 
-class PermsService extends Service
+class RolesService extends Service
 {
 
     public static function lists(array $get): array
     {
         self::setSearch([
-            '%like%'   => ['action@perms_model.action'],
-            '='        => ['type@perms_model.type','name@perms_model.name']
-        ]);
+            '%like%'   => ['keyword@remark'],
+            '='        => ['type','name'],
+            'datetime' => ['time@create_time'],
+        ],$get);
 
-        $model = new PermsModel();
+        $model = new RolesModel();
         $lists = $model
-            ->withJoin(['role'])
             ->where(self::$searchWhere)
             ->order('id desc')
             ->paginate([
                 'page'      => $get['page']  ?? 1,
                 'list_rows' => $get['pagesize'] ?? 20
             ])->toArray();
+
         foreach ($lists['data'] as &$item) {
-            $item['type_name'] = $item['role']['name'] ?? '';
-            unset($item['role']);
+            $item['create_time'] = decode_time($item['create_time']);
+            $item['update_time'] = decode_time($item['update_time']);
         }
+
         return ['count'=>$lists['total'], 'items'=>$lists['data'],'where'=>self::$searchWhere] ?? [];
+    }
+
+    public static function all(): array
+    {
+        $model = new RolesModel();
+        return $model
+            ->field('type,name')
+            ->where(['status'=>1])
+            ->order('id')
+            ->select()->toArray();
     }
 
     public static function add(array $post): void
     {
-        PermsModel::create([
+        RolesModel::create([
             'type'          => $post['type'],
             'name'        => $post['name'],
             'status'        => $post['status'] ?? 1,
-            'action'        => $post['action'] ?? ''
+            'remark'        => $post['remark'] ?? '',
+            'create_time'  => time(),
+            'update_time'  => time()
         ]);
     }
 
     public static function edit(array $post): void
     {
-        PermsModel::update([
+        RolesModel::update([
             'type'          => $post['type'],
             'name'        => $post['name'],
             'status'        => $post['status'] ?? 1,
-            'action'        => $post['action'] ?? ''
+            'remark'        => $post['remark'] ?? '',
+            'update_time'  => time()
         ], ['id'=>intval($post['id'])]);
     }
 
     public static function del(array $ids): void
     {
         if(!in_array(1,$ids)){
-            PermsModel::destroy($ids,true);
+            RolesModel::destroy($ids,true);
         }
     }
 

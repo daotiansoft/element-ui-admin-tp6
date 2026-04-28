@@ -105,12 +105,13 @@ class Service
      * PS: 参数名@字段名: user@U.sn
      *
      * @param array $search
+     * @param array $params 请求参数
      * @return array
      * @author zero
      */
-    protected static function setSearch(array $search): array
+    protected static function setSearch(array $search,array $params): array
     {
-        $params = request()->param();
+        $params = array_map('trim', $params);
         if (empty($search)) {
             return [];
         }

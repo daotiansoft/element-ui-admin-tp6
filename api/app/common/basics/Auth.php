@@ -21,6 +21,8 @@ use app\common\model\PermsModel;
 use app\common\model\UserModel;
 use app\common\service\LoginService;
 use think\App;
+use think\facade\Request;
+
 
 /**
  * 后台基类
@@ -81,8 +83,10 @@ abstract class Auth extends BaseController
      */
     protected function checkLogin(): bool
     {
-
-        if (in_array(request()->action(), $this->notNeedLogin)) {
+        $module = app('http')->getName();
+        $class = request()->controller();
+        $action = request()->action();
+        if (in_array($action, $this->notNeedLogin)) {
             //设置全局账号信息
             return true;
         } else {
@@ -110,7 +114,10 @@ abstract class Auth extends BaseController
      */
     protected function checkPower(): bool
     {
-        if (in_array(request()->action(), $this->notNeedPower)) {
+        $module = strtolower(app('http')->getName());
+        $controller = strtolower(request()->controller());
+        $action = strtolower(request()->action());
+        if (in_array($action, $this->notNeedPower)) {
             return true;
         }
         if(!isset($this->userItem['type'])){
@@ -121,16 +128,37 @@ abstract class Auth extends BaseController
         $requestUrl = strtolower(($requestUrl == 'index' || !$requestUrl) ? 'index/index' : $requestUrl);
 
         $permsModel = new PermsModel();
-        $perms = array_unique($permsModel->field(true)
+        $items = $permsModel
             ->whereIn('type', $this->userItem['type'])
             ->where(['status'=>1])
-            ->column('action'));
-        $perms = array_map(function ($p) {
-            return strtolower($p);
-        }, $perms);
-        if (!in_array(strtolower($requestUrl), $perms)) {
-            throw new NotAuthException('无权限['.$requestUrl.']');
+            ->field('module,controller,action')
+            ->select()->toArray();
+
+        foreach($items as $item){
+            if(
+                strtolower($item['module']) == $module
+                && strtolower($item['controller']) == $controller
+                && strtolower($item['action']) == $action
+            ){
+                return true;
+            }
         }
-        return true;
+
+        //判断是否存在 存在话 就创建一个无权限的
+        if(check_action_exists($module,request()->controller(),request()->action())){
+            $data = [];
+            $data['type'] = $this->userItem['type'];
+            $data['module'] = $module;
+            $data['controller'] = request()->controller();
+            $data['action'] = request()->action();
+
+            $item = $permsModel->where($data)->field('id')->find();
+            if(!$item){
+                $data['status'] = PermsModel::STATUS_OFF;
+                $permsModel->insert($data);
+            }
+        }
+        throw new NotAuthException('无权限['.$requestUrl.']');
     }
+
 }

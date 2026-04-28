@@ -1,5 +1,5 @@
 <?php
-namespace app\common\validate;
+namespace app\super\validate;
 
 
 use app\common\basics\Validate;

@@ -163,3 +163,16 @@ function format_bytes(int $size, string $delimiter = '', int $precision = 2): st
     return round($size, $precision) . $delimiter . $units[$i];
 }
 
+/*
+ * 判断方法是否存在
+ */
+function check_action_exists($module, $controller, $action)
+{
+    try {
+        $controllerClass = 'app\\' . $module . '\\controller\\' . $controller;
+        return class_exists($controllerClass) && method_exists($controllerClass, $action);
+    } catch (\Throwable $e) {
+        return false;
+    }
+}
+

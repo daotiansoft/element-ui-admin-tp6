@@ -3,9 +3,9 @@
 namespace app\super\controller;
 
 use app\common\basics\Auth;
-use app\common\service\RolesService;
+use app\super\service\RolesService;
 use app\common\utils\AjaxUtils;
-use app\common\validate\RolesValidate;
+use app\super\validate\RolesValidate;
 use think\App;
 use think\response\Json;
 
@@ -14,7 +14,7 @@ class Roles extends Auth
 {
     public function items():Json
     {
-        $list = RolesService::lists($this->request->get());
+        $list = RolesService::lists($this->request->param());
         return AjaxUtils::success($list);
     }
 

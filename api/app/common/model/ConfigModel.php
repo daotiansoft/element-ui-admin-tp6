@@ -13,19 +13,19 @@ class ConfigModel extends CommonModel
     const SHOW_ON=1;//显示
     const SHOW_OFF=-1;//隐藏
 
-    public $fields=[
-        'id',
-        'key',
-        'type',
-        'name',
-        'content',
-        'placeholder',
-        'params',
-        'sort',
-        'show'
+    protected $schema=[
+        'id'=>'int',
+        'key'=>'string',
+        'type'=>'string',
+        'name'=>'string',
+        'content'=>'string',
+        'placeholder'=>'string',
+        'params'=>'string',
+        'sort'=>'int',
+        'show'=>'int',
     ];
     public function getContentByKey($key){
-        $req= $this->where('key','=',$key)->field($this->fields)->find();
+        $req= $this->where('key','=',$key)->find();
         if($req){
             return $req['content'];
         }

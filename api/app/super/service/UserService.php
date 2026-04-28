@@ -13,57 +13,54 @@
 // +----------------------------------------------------------------------
 declare (strict_types = 1);
 
-namespace app\common\service;
-
+namespace app\super\service;
 
 use app\common\basics\Service;
-use app\common\model\RolesModel;
+use app\common\model\UserModel;
+use think\facade\Cache;
 
-class RolesService extends Service
+class UserService extends Service
 {
+    public static function getItemByUsername($username){
+        $model = new UserModel();
+        return $model->where('username','=',$username)->find();
+    }
 
     public static function lists(array $get): array
     {
         self::setSearch([
-            '%like%'   => ['keyword@remark'],
-            '='        => ['type','name'],
-            'datetime' => ['time@create_time'],
-        ]);
-
-        $model = new RolesModel();
+            '%like%'   => ['keyword@user_model.username'],
+            'datetime' => ['time@user_model.create_time'],
+        ],$get);
+        $model = new UserModel();
         $lists = $model
+            ->withoutField(['password','rand_code'])
+            ->withJoin(['role'])
             ->where(self::$searchWhere)
             ->order('id desc')
             ->paginate([
                 'page'      => $get['page']  ?? 1,
                 'list_rows' => $get['pagesize'] ?? 20
             ])->toArray();
-
         foreach ($lists['data'] as &$item) {
+            $item['role_name'] = $item['role']['name'] ?? '';
+            unset($item['role']);
+
             $item['create_time'] = decode_time($item['create_time']);
             $item['update_time'] = decode_time($item['update_time']);
         }
 
-        return ['count'=>$lists['total'], 'items'=>$lists['data'],'where'=>self::$searchWhere] ?? [];
-    }
-
-    public static function all(): array
-    {
-        $model = new RolesModel();
-        return $model
-            ->field('type,name')
-            ->where(['status'=>1])
-            ->order('id')
-            ->select()->toArray();
+        return ['count'=>$lists['total'], 'items'=>$lists['data']] ?? [];
     }
 
     public static function add(array $post): void
     {
-        RolesModel::create([
+        UserModel::create([
             'type'          => $post['type'],
-            'name'        => $post['name'],
+            'username'        => $post['username'],
+            'password'        => $post['password'],
+            'rand_code'        => $post['rand_code'],
             'status'        => $post['status'] ?? 1,
-            'remark'        => $post['remark'] ?? '',
             'create_time'  => time(),
             'update_time'  => time()
         ]);
@@ -71,19 +68,25 @@ class RolesService extends Service
 
     public static function edit(array $post): void
     {
-        RolesModel::update([
+        $data = [
             'type'          => $post['type'],
-            'name'        => $post['name'],
+            'username'        => $post['username'],
+            'password'        => $post['password'] ?? '',
+            'rand_code'        => $post['rand_code'] ?? '',
             'status'        => $post['status'] ?? 1,
-            'remark'        => $post['remark'] ?? '',
             'update_time'  => time()
-        ], ['id'=>intval($post['id'])]);
+        ];
+        if(empty($data['password'])){
+            unset($data['password']);
+            unset($data['rand_code']);
+        }
+        UserModel::update($data, ['id'=>intval($post['id'])]);
     }
 
     public static function del(array $ids): void
     {
         if(!in_array(1,$ids)){
-            RolesModel::destroy($ids,true);
+            UserModel::destroy($ids,true);
         }
     }
 

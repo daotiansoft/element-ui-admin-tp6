@@ -13,7 +13,7 @@
 // +----------------------------------------------------------------------
 declare (strict_types = 1);
 
-namespace app\common\service;
+namespace app\super\service;
 
 
 use app\common\basics\Service;
@@ -57,9 +57,9 @@ class AppListService extends Service
     {
         self::setSearch([
             '%like%'   => ['keyword@app_list_model.remark'],
-            '='        => ['status','appid','username@user.username'],
+            '='        => ['status@app_list_model.status','appid@app_list_model.appid','username@user.username'],
             'datetime' => ['time@app_list_model.create_time'],
-        ]);
+        ],$get);
 
         $model = new AppListModel();
         $lists = $model
@@ -79,7 +79,7 @@ class AppListService extends Service
             $item['update_time'] = decode_time($item['update_time']);
         }
 
-        return ['count'=>$lists['total'], 'items'=>$lists['data']] ?? [];
+        return ['count'=>$lists['total'], 'items'=>$lists['data'],'where'=>self::$searchWhere] ?? [];
     }
 
     public static function add(array $post): void

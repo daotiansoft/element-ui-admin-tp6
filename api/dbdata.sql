@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 17/04/2026 23:00:13
+ Date: 28/04/2026 23:54:34
 */
 
 SET NAMES utf8mb4;
@@ -97,7 +97,7 @@ CREATE TABLE `dt_login_log`  (
   `desc` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
   `ip` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 41 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '登录记录' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 43 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '登录记录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of dt_login_log
@@ -142,6 +142,8 @@ INSERT INTO `dt_login_log` VALUES (37, 1, '', 1772851285, 1, '', '127.0.0.1');
 INSERT INTO `dt_login_log` VALUES (38, 1, '', 1772856924, 1, '', '127.0.0.1');
 INSERT INTO `dt_login_log` VALUES (39, 1, '', 1772860651, 1, '', '127.0.0.1');
 INSERT INTO `dt_login_log` VALUES (40, 1, '', 1776436153, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (41, 1, '', 1776493196, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (42, 1, '', 1777387617, 1, '', '127.0.0.1');
 
 -- ----------------------------
 -- Table structure for dt_perms
@@ -151,36 +153,39 @@ CREATE TABLE `dt_perms`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
   `type` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `action` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `module` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '' COMMENT '模块',
+  `controller` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL COMMENT '控制器',
+  `action` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT '方法',
   `status` tinyint(1) NULL DEFAULT 1,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '权限' ROW_FORMAT = Dynamic;
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `type`(`type`, `module`, `controller`, `action`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '权限' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of dt_perms
 -- ----------------------------
-INSERT INTO `dt_perms` VALUES (1, '测试', 'user', 'webapi/index/test', 1);
-INSERT INTO `dt_perms` VALUES (2, '配置', 'admin', 'super/config/items', 1);
-INSERT INTO `dt_perms` VALUES (3, '配置', 'admin', 'super/config/save', 1);
-INSERT INTO `dt_perms` VALUES (4, '富文本', 'admin', 'super/editor/items', 1);
-INSERT INTO `dt_perms` VALUES (5, '富文本', 'admin', 'super/editor/save', 1);
-INSERT INTO `dt_perms` VALUES (6, '账号管理', 'admin', 'super/member/items', 1);
-INSERT INTO `dt_perms` VALUES (7, '账号管理', 'admin', 'super/member/add', 1);
-INSERT INTO `dt_perms` VALUES (8, '账号管理', 'admin', 'super/member/edit', 1);
-INSERT INTO `dt_perms` VALUES (9, '账号管理', 'admin', 'super/member/del', 1);
-INSERT INTO `dt_perms` VALUES (10, '接口管理', 'admin', 'super/applist/items', 1);
-INSERT INTO `dt_perms` VALUES (11, '接口管理', 'admin', 'super/applist/add', 1);
-INSERT INTO `dt_perms` VALUES (12, '接口管理', 'admin', 'super/applist/edit', 1);
-INSERT INTO `dt_perms` VALUES (13, '接口管理', 'admin', 'super/applist/del', 1);
-INSERT INTO `dt_perms` VALUES (14, '角色管理', 'admin', 'super/roles/items', 1);
-INSERT INTO `dt_perms` VALUES (15, '角色管理', 'admin', 'super/roles/add', 1);
-INSERT INTO `dt_perms` VALUES (16, '角色管理', 'admin', 'super/roles/edit', 1);
-INSERT INTO `dt_perms` VALUES (17, '角色管理', 'admin', 'super/roles/del', 1);
-INSERT INTO `dt_perms` VALUES (18, '角色管理', 'admin', 'super/roles/all', 1);
-INSERT INTO `dt_perms` VALUES (19, '权限管理', 'admin', 'super/perms/items', 1);
-INSERT INTO `dt_perms` VALUES (20, '权限管理', 'admin', 'super/perms/add', 1);
-INSERT INTO `dt_perms` VALUES (21, '权限管理', 'admin', 'super/perms/edit', 1);
-INSERT INTO `dt_perms` VALUES (22, '权限管理', 'admin', 'super/perms/types', 1);
+INSERT INTO `dt_perms` VALUES (1, '测试', 'user', 'webapi', 'index', 'test', 1);
+INSERT INTO `dt_perms` VALUES (2, '配置', 'admin', 'super', 'config', 'items', 1);
+INSERT INTO `dt_perms` VALUES (3, '配置', 'admin', 'super', 'config', 'save', 1);
+INSERT INTO `dt_perms` VALUES (4, '富文本', 'admin', 'super', 'editor', 'items', 1);
+INSERT INTO `dt_perms` VALUES (5, '富文本', 'admin', 'super', 'editor', 'save', 1);
+INSERT INTO `dt_perms` VALUES (6, '账号管理', 'admin', 'super', 'member', 'items', 1);
+INSERT INTO `dt_perms` VALUES (7, '账号管理', 'admin', 'super', 'member', 'add', 1);
+INSERT INTO `dt_perms` VALUES (8, '账号管理', 'admin', 'super', 'member', 'edit', 1);
+INSERT INTO `dt_perms` VALUES (9, '账号管理', 'admin', 'super', 'member', 'del', 1);
+INSERT INTO `dt_perms` VALUES (10, '接口管理', 'admin', 'super', 'AppList', 'items', 1);
+INSERT INTO `dt_perms` VALUES (11, '接口管理', 'admin', 'super', 'applist', 'add', 1);
+INSERT INTO `dt_perms` VALUES (12, '接口管理', 'admin', 'super', 'applist', 'edit', 1);
+INSERT INTO `dt_perms` VALUES (13, '接口管理', 'admin', 'super', 'applist', 'del', 1);
+INSERT INTO `dt_perms` VALUES (14, '角色管理', 'admin', 'super', 'roles', 'items', 1);
+INSERT INTO `dt_perms` VALUES (15, '角色管理', 'admin', 'super', 'roles', 'add', 1);
+INSERT INTO `dt_perms` VALUES (16, '角色管理', 'admin', 'super', 'roles', 'edit', 1);
+INSERT INTO `dt_perms` VALUES (17, '角色管理', 'admin', 'super', 'roles', 'del', 1);
+INSERT INTO `dt_perms` VALUES (18, '角色管理', 'admin', 'super', 'roles', 'all', 1);
+INSERT INTO `dt_perms` VALUES (19, '权限管理', 'admin', 'super', 'perms', 'items', 1);
+INSERT INTO `dt_perms` VALUES (20, '权限管理', 'admin', 'super', 'perms', 'add', 1);
+INSERT INTO `dt_perms` VALUES (21, '权限管理', 'admin', 'super', 'perms', 'edit', 1);
+INSERT INTO `dt_perms` VALUES (22, '权限管理', 'admin', 'super', 'perms', 'types', 1);
 
 -- ----------------------------
 -- Table structure for dt_roles

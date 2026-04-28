@@ -3,10 +3,11 @@
 namespace app\super\controller;
 
 use app\common\basics\Auth;
-use app\common\service\PermsService;
-use app\common\service\RolesService;
+use app\common\exception\RequestException;
+use app\super\service\PermsService;
+use app\super\service\RolesService;
 use app\common\utils\AjaxUtils;
-use app\common\validate\PermsValidate;
+use app\super\validate\PermsValidate;
 use think\App;
 use think\response\Json;
 
@@ -15,7 +16,7 @@ class Perms extends Auth
 {
     public function items():Json
     {
-        $list = PermsService::lists($this->request->get());
+        $list = PermsService::lists($this->request->param());
         return AjaxUtils::success($list);
     }
 
@@ -28,6 +29,9 @@ class Perms extends Auth
     public function add(){
         $data = $this->request->param();
         (new PermsValidate())->addCheck($data);
+        if(!check_action_exists($data['module'],$data['controller'],$data['action'])){
+            throw new RequestException('方法不存在');
+        }
         PermsService::add($data);
         return AjaxUtils::success();
     }
@@ -35,6 +39,9 @@ class Perms extends Auth
     public function edit(){
         $data = $this->request->param();
         (new PermsValidate())->editCheck($data);
+        if(!check_action_exists($data['module'],$data['controller'],$data['action'])){
+            throw new RequestException('方法不存在');
+        }
         PermsService::edit($data);
         return AjaxUtils::success();
     }

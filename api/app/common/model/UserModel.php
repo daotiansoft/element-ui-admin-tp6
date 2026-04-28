@@ -26,7 +26,7 @@ class UserModel extends CommonModel
     ];
 
     public function getItemByUsername($username){
-        return $this->where('username','=',$username)->field($this->fields)->find();
+        return $this->where('username','=',$username)->find();
     }
 
     public function role(): HasOne

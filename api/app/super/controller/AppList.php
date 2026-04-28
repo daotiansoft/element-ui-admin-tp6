@@ -3,10 +3,8 @@
 namespace app\super\controller;
 
 use app\common\basics\Auth;
-use app\common\model\AppListModel;
-use app\common\model\UserModel;
-use app\common\service\AppListService;
-use app\common\service\UserService;
+use app\super\service\AppListService;
+use app\super\service\UserService;
 use app\common\utils\AjaxUtils;
 use app\super\validate\AppListValidate;
 use think\App;
@@ -17,7 +15,7 @@ class AppList extends Auth
 {
     public function items():Json
     {
-        $list = AppListService::lists($this->request->get());
+        $list = AppListService::lists($this->request->param());
         return AjaxUtils::success($list);
     }
 

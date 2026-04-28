@@ -4,9 +4,9 @@ namespace app\super\controller;
 
 use app\common\basics\Auth;
 use app\common\model\UserModel;
-use app\common\service\UserService;
+use app\super\service\UserService;
 use app\common\utils\AjaxUtils;
-use app\common\validate\UserValidate;
+use app\super\validate\UserValidate;
 use think\App;
 use think\response\Json;
 
@@ -15,7 +15,7 @@ class Member extends Auth
 {
     public function items():Json
     {
-        $list = UserService::lists($this->request->get());
+        $list = UserService::lists($this->request->param());
         return AjaxUtils::success($list);
     }
 

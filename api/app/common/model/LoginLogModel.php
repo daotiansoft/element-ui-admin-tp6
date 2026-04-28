@@ -8,14 +8,14 @@ class LoginLogModel extends CommonModel
 
     protected $name = 'login_log';
 
-    public $fields=[
-        'id',
-        'uid',
-        'device',
-        'time',
-        'status',
-        'desc',
-        'ip'
+    protected $schema=[
+        'id'=>'int',
+        'uid'=>'int',
+        'device'=>'string',
+        'time'=>'int',
+        'status'=>'int',
+        'desc'=>'string',
+        'ip'=>'string',
     ];
 
     public function log($uid,$device,$status,$ip,$desc=''){

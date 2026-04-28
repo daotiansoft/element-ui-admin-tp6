@@ -20,7 +20,7 @@ class CommonModel extends Model
      * @throws \think\db\exception\ModelNotFoundException
      */
     public function getItemById($id){
-        return $this->field($this->fields)->find($id)->toArray();
+        return $this->find($id);
     }
 
     /** 获取所有字段
@@ -29,10 +29,10 @@ class CommonModel extends Model
      */
     public function getFields($prefix = ''){
         if(empty($prefix)){
-            return $this->fields;
+            return array_keys($this->schema);
         }
         $fields=[];
-        foreach($this->fields as $f){
+        foreach(array_keys($this->schema) as $f){
             $fields[]=$prefix.$f;
         }
         return $fields;

@@ -31,6 +31,8 @@
           <el-table-column prop="type" label="角色标识" />
           <el-table-column prop="type_name" label="角色名称" />
           <el-table-column prop="name" label="名称" />
+          <el-table-column prop="module" label="模块" />
+          <el-table-column prop="controller" label="控制器" />
           <el-table-column prop="action" label="方法名" />
           <el-table-column label="状态" width="80" align="center">
             <template slot-scope="scope">
@@ -54,11 +56,17 @@
       <el-form ref="add_form" :model="add_form">
         <el-form-item label="角色" label-width="80px">
           <el-select v-model="add_form.type" placeholder="选择角色">
-            <el-option v-for="(val, key, i) in roles" :key="key" :label="val.name" :value="val.type" />
+            <el-option v-for="(val, key) in roles" :key="key" :label="val.name" :value="val.type" />
           </el-select>
         </el-form-item>
         <el-form-item label="名称" label-width="80px">
           <el-input v-model="add_form.name" autocomplete="off" placeholder="请输入名称" />
+        </el-form-item>
+        <el-form-item label="模块" label-width="80px">
+          <el-input v-model="add_form.module" autocomplete="off" placeholder="请输入模块" />
+        </el-form-item>
+        <el-form-item label="控制器" label-width="80px">
+          <el-input v-model="add_form.controller" autocomplete="off" placeholder="请输入控制器" />
         </el-form-item>
         <el-form-item label="方法名" label-width="80px">
           <el-input v-model="add_form.action" autocomplete="off" placeholder="请输入方法名" />
@@ -80,11 +88,17 @@
       <el-form ref="edit_form" :model="edit_form">
         <el-form-item label="角色" label-width="80px">
           <el-select v-model="edit_form.type" placeholder="选择角色">
-            <el-option v-for="(val, key, i) in roles" :key="key" :label="val.name" :value="val.type" />
+            <el-option v-for="(val, key) in roles" :key="key" :label="val.name" :value="val.type" />
           </el-select>
         </el-form-item>
         <el-form-item label="名称" label-width="80px">
           <el-input v-model="edit_form.name" autocomplete="off" placeholder="请输入名称" />
+        </el-form-item>
+        <el-form-item label="模块" label-width="80px">
+          <el-input v-model="edit_form.module" autocomplete="off" placeholder="请输入模块" />
+        </el-form-item>
+        <el-form-item label="控制器" label-width="80px">
+          <el-input v-model="edit_form.controller" autocomplete="off" placeholder="请输入控制器" />
         </el-form-item>
         <el-form-item label="方法名" label-width="80px">
           <el-input v-model="edit_form.action" autocomplete="off" placeholder="请输入方法名" />
