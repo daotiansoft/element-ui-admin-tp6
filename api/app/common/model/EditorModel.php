@@ -1,6 +1,8 @@
 <?php
 namespace app\common\model;
 
+use app\common\utils\UrlUtils;
+
 class EditorModel extends CommonModel
 {
     protected $name = 'editor';
@@ -14,7 +16,7 @@ class EditorModel extends CommonModel
     public function getContentByKey($key){
         $req= $this->where('key','=',$key)->find();
         if($req){
-            return $req['content'];
+            return UrlUtils::editorAbsoluteSrc($req['content']);
         }
         return '';
     }
