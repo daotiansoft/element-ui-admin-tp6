@@ -22,37 +22,6 @@ use app\common\model\AppListModel;
 
 class AppListService extends Service
 {
-    public static function check($params = []){
-        ksort($params);
-        $appid = isset($params['appid']) ? $params['appid'] : '';
-        $sign = isset($params['sign']) ? $params['sign'] : '';
-        $time = isset($params['time']) ? intval($params['time']) : 0;
-
-        if(empty($appid) || empty($sign) || $time < time() - 60){
-            throw new RequestException('参数错误');
-        }
-
-        $appModel = new AppListModel();
-        $appItem = $appModel->where('appid','=',$appid)->find();
-        if(!$appItem || $appItem['status'] != AppListModel::STATUS_ON){
-            throw new RequestException('appid不存在');
-        }
-
-        $sign_str = [];
-        foreach($params as $key=>$v){
-            if($key == 'sign'){
-                continue;
-            }
-            $sign_str[] = $key . '=' .$v;
-        }
-        $sign_str = implode('&',$sign_str);
-
-        if($sign != md5($sign_str . '&secret=' .$appItem['secret'])){
-            throw new RequestException('sign错误',-1,['sign_str'=>$sign_str . '&secret=****']);
-        }
-        return $appItem;
-    }
-
     public static function lists(array $get): array
     {
         self::setSearch([

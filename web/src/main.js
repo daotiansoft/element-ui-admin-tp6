@@ -35,9 +35,18 @@ Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = false
 
+Vue.prototype.$moment = moment
+Vue.filter('formatDate', (value) => {
+  if (value > 0) {
+    return moment(value).format('YYYY-MM-DD HH:mm:ss')
+  } else {
+    return '-'
+  }
+})
+
 new Vue({
   el: '#app',
   router,
   store,
-  render: h => h(App)
+  render: (h) => h(App)
 })

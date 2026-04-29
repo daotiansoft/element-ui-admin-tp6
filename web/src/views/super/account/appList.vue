@@ -31,7 +31,7 @@
           <el-table-column prop="secret" label="SECRET" />
           <el-table-column label="创建时间" width="160" align="center">
             <template slot-scope="scope">
-              <div>{{ moment(scope.row.create_time * 1000).format('YYYY-MM-DD HH:mm:ss') }}</div>
+              <div>{{ scope.row.create_time * 1000 | formatDate }}</div>
             </template>
           </el-table-column>
           <el-table-column label="状态" width="80" align="center">
@@ -104,7 +104,6 @@
 
 <script>
 import setting from '@/settings.js'
-import moment from 'moment'
 export default {
   data() {
     return {
@@ -141,7 +140,6 @@ export default {
     this.roles = setting.roles
   },
   methods: {
-    moment,
     submit_search() {
       this.search_form.page = 1
       this.load_items()

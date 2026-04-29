@@ -86,8 +86,7 @@ abstract class Auth extends BaseController
         $module = app('http')->getName();
         $class = request()->controller();
         $action = request()->action();
-        if (in_array($action, $this->notNeedLogin)) {
-            //设置全局账号信息
+        if (in_array($action, $this->notNeedLogin) || (isset($this->notNeedLogin[0]) && $this->notNeedLogin[0] == '*')) {
             return true;
         } else {
             $token = request()->header('Api-Token');
@@ -117,7 +116,7 @@ abstract class Auth extends BaseController
         $module = strtolower(app('http')->getName());
         $controller = strtolower(request()->controller());
         $action = strtolower(request()->action());
-        if (in_array($action, $this->notNeedPower)) {
+        if (in_array($action, $this->notNeedPower)  || (isset($this->notNeedPower[0]) && $this->notNeedPower[0] == '*')) {
             return true;
         }
         if(!isset($this->userItem['type'])){

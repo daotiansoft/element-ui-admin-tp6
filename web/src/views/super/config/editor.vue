@@ -5,11 +5,7 @@
         <tinymce v-model="item.content" :height="500" />
       </el-tab-pane>
     </el-tabs>
-    <el-button
-      type="primary"
-      style="margin: 20px 0"
-      @click="save"
-    >保存</el-button>
+    <el-button type="primary" style="margin: 20px 0" @click="save">保存</el-button>
   </div>
 </template>
 
@@ -32,7 +28,7 @@ export default {
     this.load_editor()
   },
   methods: {
-    save: function() {
+    save: function () {
       this.loading = true
       this.$store
         .dispatch('super/editor/save', this.items)
@@ -47,7 +43,7 @@ export default {
           this.loading = false
         })
     },
-    load_editor: function() {
+    load_editor: function () {
       this.loading = true
       this.$store
         .dispatch('super/editor/items')
@@ -58,7 +54,7 @@ export default {
           }
           this.loading = false
         })
-        .catch(() => {})
+        .catch(() => { })
     }
   }
 }

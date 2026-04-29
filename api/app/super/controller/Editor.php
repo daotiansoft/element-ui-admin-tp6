@@ -12,7 +12,7 @@ class Editor extends Auth
 
     public function items(){
         $model = new EditorModel();
-        $data = $model->field($model->fields)->select();
+        $data = $model->select();
         $items = [];
         foreach($data as $item){
             $item['content'] = html_domain_decode($item['content']);

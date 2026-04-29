@@ -9,11 +9,9 @@ use think\App;
 
 class Config extends Auth
 {
-
-
     public function items(){
         $model = new ConfigModel();
-        $data = $model->field($model->fields)->where('show','=',$model::SHOW_ON)->order('sort')->select();
+        $data = $model->where('show','=',$model::SHOW_ON)->order('sort')->select();
         $items = [];
         foreach($data as $item){
             if($item['type'] == 'select'){
