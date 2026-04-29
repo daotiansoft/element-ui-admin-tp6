@@ -30,8 +30,11 @@ class UrlUtils
      * @param string $url (相对路径)
      * @return string     (绝对路径)
      */
-    public static function toAbsoluteUrl(string $url = ''): string
+    public static function toAbsoluteUrl(string $url = '',string $domain = null): string
     {
+        if($domain == null){
+            $domain = request()->domain();
+        }
         if ($url === '' || $url === '/') {
             return $url;
         }
@@ -45,10 +48,10 @@ class UrlUtils
         }
 
         if (str_starts_with($url, '/static') || str_starts_with($url, '/temporary')) {
-            return request()->domain() . $url;
+            return $domain . $url;
         }
 
-        return request()->domain() . $url;
+        return $domain . $url;
     }
 
     /**

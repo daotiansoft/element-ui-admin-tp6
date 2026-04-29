@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 29/04/2026 15:12:35
+ Date: 29/04/2026 20:27:47
 */
 
 SET NAMES utf8mb4;
@@ -61,7 +61,7 @@ CREATE TABLE `dt_config`  (
 -- ----------------------------
 INSERT INTO `dt_config` VALUES (1, 'site_name', 'text', '站点名称', '管理面板', '', NULL, 10, 1);
 INSERT INTO `dt_config` VALUES (2, 'site_status', 'select', '是否闭站', '1', '站点关闭后，用户无法登录', '[{\"id\":1,\"name\":\"否\"},{\"id\":2,\"name\":\"是\"}]', 10, 1);
-INSERT INTO `dt_config` VALUES (3, 'logo', 'image', 'LOGO', '[domain]/storage/topic/20230523/c68c18dda07ac88b4b6e3f609a418ba8.png', NULL, NULL, 50, -1);
+INSERT INTO `dt_config` VALUES (3, 'logo', 'image', 'LOGO', 'storage/topic/20260429/e0144674ba48ce1a230c85cffb412ba4.png', NULL, NULL, 50, 1);
 INSERT INTO `dt_config` VALUES (4, 'site_stop_msg', 'text', '闭站提示', '系统维护中...', NULL, NULL, 10, 1);
 INSERT INTO `dt_config` VALUES (5, 'demo_textarea', 'textarea', '多行文本', NULL, NULL, NULL, 1, -1);
 INSERT INTO `dt_config` VALUES (6, 'captcha_status', 'select', '登录验证码', '2', NULL, '[{\"id\":1,\"name\":\"启用\"},{\"id\":2,\"name\":\"关闭\"}]', 50, 1);
@@ -82,7 +82,7 @@ CREATE TABLE `dt_editor`  (
 -- ----------------------------
 -- Records of dt_editor
 -- ----------------------------
-INSERT INTO `dt_editor` VALUES (1, 'notice', '系统通知内容', '<p>欢迎使用！</p>');
+INSERT INTO `dt_editor` VALUES (1, 'notice', '系统通知内容', '<p>欢迎使用！</p>\n<p><img class=\"wscnph\" src=\"storage/topic/20260429/02d70216955419bec3f1a1e1f59ef665.png\" /></p>');
 
 -- ----------------------------
 -- Table structure for dt_login_log
@@ -97,7 +97,7 @@ CREATE TABLE `dt_login_log`  (
   `desc` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
   `ip` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 43 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '登录记录' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 44 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '登录记录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of dt_login_log
@@ -144,6 +144,7 @@ INSERT INTO `dt_login_log` VALUES (39, 1, '', 1772860651, 1, '', '127.0.0.1');
 INSERT INTO `dt_login_log` VALUES (40, 1, '', 1776436153, 1, '', '127.0.0.1');
 INSERT INTO `dt_login_log` VALUES (41, 1, '', 1776493196, 1, '', '127.0.0.1');
 INSERT INTO `dt_login_log` VALUES (42, 1, '', 1777387617, 1, '', '127.0.0.1');
+INSERT INTO `dt_login_log` VALUES (43, 1, '', 1777464110, 1, '', '127.0.0.1');
 
 -- ----------------------------
 -- Table structure for dt_perms
@@ -222,7 +223,13 @@ CREATE TABLE `dt_upload`  (
   `path` varchar(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
   `time` int(20) NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of dt_upload
+-- ----------------------------
+INSERT INTO `dt_upload` VALUES (1, 'phpE6E6.tmp', 7668, 'image/png', 'image', '/storage/topic/20260429/e0144674ba48ce1a230c85cffb412ba4.png', 1777464228);
+INSERT INTO `dt_upload` VALUES (2, 'phpDE3F.tmp', 7668, 'image/png', 'image', '/storage/topic/20260429/02d70216955419bec3f1a1e1f59ef665.png', 1777465471);
 
 -- ----------------------------
 -- Table structure for dt_user

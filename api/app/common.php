@@ -27,27 +27,6 @@ function get_rand_str($length){
 }
 
 /**
- * 将html中的域名编码替换
- * @param $content
- */
-function html_domain_encode($content,$url = ''){
-    if(empty($url)){
-        $url = request()->domain();
-    }
-    return str_replace($url,'[domain]',$content);
-}
-/**
- * 将html中的域名解码替换
- * @param $content
- */
-function html_domain_decode($content,$url = ''){
-    if(empty($url)){
-        $url = request()->domain();
-    }
-    return str_replace('[domain]',$url,$content);
-}
-
-/**
  * 生成订单号
  * @return string
  */

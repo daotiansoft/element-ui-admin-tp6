@@ -4,6 +4,7 @@ namespace app\super\controller;
 
 use app\common\basics\Auth;
 use app\common\model\ConfigModel;
+use app\common\utils\UrlUtils;
 use think\App;
 
 
@@ -17,8 +18,9 @@ class Config extends Auth
             if($item['type'] == 'select'){
                 $item['params'] = json_decode($item['params'],true);
                 $item['content'] = intval($item['content']);
-            }else{
-                $item['content'] = html_domain_decode($item['content']);
+            }
+            if($item['type'] == 'image'){
+                $item['content'] = UrlUtils::toAbsoluteUrl($item['content']);
             }
             $items[]=$item;
         }
@@ -27,12 +29,12 @@ class Config extends Auth
 
     public function save(){
         $params = $this->request->param();
-
         $model = new ConfigModel();
-
         foreach($params as $item){
             if(isset($item['key']) && !empty($item['key'])){
-                $item['content'] = html_domain_encode($item['content']);
+                if($item['type'] == 'image'){
+                    $item['content'] = UrlUtils::toRelativeUrl($item['content']);
+                }
                 $model->where('key','=',$item['key'])->update(array('content'=>$item['content']));
             }
         }
