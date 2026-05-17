@@ -94,6 +94,12 @@ export const asyncRoutes = [
         name: '富文本',
         component: () => import('@/views/super/config/editor'),
         meta: { title: '富文本', icon: '' }
+      },
+      {
+        path: 'formField',
+        name: '表单',
+        component: () => import('@/views/super/config/formField'),
+        meta: { title: '表单', icon: '' }
       }
     ]
   },

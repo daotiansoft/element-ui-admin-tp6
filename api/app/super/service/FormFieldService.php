@@ -17,63 +17,53 @@ namespace app\super\service;
 
 
 use app\common\basics\Service;
-use app\common\model\PermsModel;
+use app\common\model\FormFieldModel;
 
-class PermsService extends Service
+class FormFieldService extends Service
 {
-
     public static function lists(array $get): array
     {
         self::setSearch([
-            '%like%'   => ['action@perms_model.action'],
-            '='        => ['type@perms_model.type','name@perms_model.name']
+            '%like%'   => ['name'],
+            '='        => ['key'],
+            'datetime' => ['create_time'],
         ],$get);
 
-        $model = new PermsModel();
+        $model = new FormFieldModel();
         $lists = $model
-            ->withJoin(['role'])
             ->where(self::$searchWhere)
             ->order('id desc')
             ->paginate([
                 'page'      => $get['page']  ?? 1,
                 'list_rows' => $get['pagesize'] ?? 20
             ])->toArray();
-        foreach ($lists['data'] as &$item) {
-            $item['type_name'] = $item['role']['name'] ?? '';
-            unset($item['role']);
-        }
         return ['count'=>$lists['total'], 'items'=>$lists['data']] ?? [];
     }
 
     public static function add(array $post): void
     {
-        PermsModel::create([
-            'type'          => $post['type'],
+        FormFieldModel::create([
+            'key'          => $post['key'],
             'name'        => $post['name'],
-            'module'        => $post['module'],
-            'controller'        => $post['controller'],
-            'action'        => $post['action'],
-            'status'        => $post['status'] ?? 1,
+            'field_json'        => $post['field_json'] ?? '',
+            'create_time'  => time(),
+            'update_time'  => time()
         ]);
     }
 
     public static function edit(array $post): void
     {
-        PermsModel::update([
-            'type'          => $post['type'],
+        FormFieldModel::update([
+            'key'          => $post['key'],
             'name'        => $post['name'],
-            'module'        => $post['module'],
-            'controller'        => $post['controller'],
-            'action'        => $post['action'],
-            'status'        => $post['status'] ?? 1,
+            'field_json'        => $post['field_json'] ?? '',
+            'update_time'  => time()
         ], ['id'=>intval($post['id'])]);
     }
 
     public static function del(array $ids): void
     {
-        if(!in_array(1,$ids)){
-            PermsModel::destroy($ids,true);
-        }
+        FormFieldModel::destroy($ids,true);
     }
 
 
