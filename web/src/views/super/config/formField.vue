@@ -47,18 +47,17 @@
         :page-size="search_form.pagesize" @current-change="current_change" />
     </div>
     <el-dialog v-loading="loading" title="添加" :visible.sync="addVisible">
-      <el-form ref="add_form" :model="add_form">
-        <el-form-item label="唯一标识" label-width="80px">
-          <el-input v-model="add_form.key" autocomplete="off" placeholder="请输入唯一标识" />
-        </el-form-item>
-        <el-form-item label="名称" label-width="80px">
-          <el-input v-model="add_form.name" autocomplete="off" placeholder="请输入名称" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="addVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submit_add">确 定</el-button>
-      </div>
+      <DynamicForm
+      ref="myForm"
+      v-model="formData"
+      :fields="formFields"
+      :label-width="'120px'"
+      :show-actions="true"
+      :actions="actionsConfig"
+      @submit="handleSubmit"
+      @change="handleChange"
+      @reset="handleReset"
+    />
     </el-dialog>
 
     <el-dialog v-loading="loading" title="编辑" :visible.sync="editVisible">
@@ -122,7 +121,12 @@
 
 <script>
 import setting from '@/settings.js'
+import DynamicForm from '@/components/DynamicForm.vue';
+
 export default {
+  components: {
+    DynamicForm
+  },
   data() {
     return {
       search_form: {
@@ -157,7 +161,116 @@ export default {
         key:'',
         name:'',
         placeholder:''
+      },
+
+
+
+      formData: {
+        username: '',
+        age: 18,
+        gender: 'male',
+        hobbies: ['reading'],
+        status: true,
+        birthday: '',
+        avatar: ''
+      },
+      formFields: [
+        {
+          prop: 'username',
+          label: '用户名',
+          type: 'input',
+          placeholder: '请输入用户名',
+          required: true,
+          maxlength: 20,
+          showWordLimit: true,
+          rules: [
+            { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' },
+            { required: true, message: '请输入用户名', trigger: 'blur' },
+          ]
+        },
+        { 
+          prop: 'bio',
+          label: '个人简介',
+          type: 'textarea',
+          rows: 4,
+          maxlength: 200,
+          showWordLimit: true
+        },
+        {
+          prop: 'age',
+          label: '年龄',
+          type: 'number',
+          min: 0,
+          max: 150,
+          required: true
+        },
+        {
+          prop: 'gender',
+          label: '性别',
+          type: 'radio',
+          defaultValue: 'male',
+          options: [
+            { label: '男', value: 'male' },
+            { label: '女', value: 'female' }
+          ]
+        },
+        {
+          prop: 'hobbies',
+          label: '兴趣爱好',
+          type: 'checkbox',
+          options: [
+            { label: '阅读', value: 'reading' },
+            { label: '音乐', value: 'music' },
+            { label: '运动', value: 'sports' },
+            { label: '旅行', value: 'travel' }
+          ]
+        },
+        {
+          prop: 'city',
+          label: '城市',
+          type: 'select',
+          placeholder: '请选择城市',
+          clearable: true,
+          filterable: true,
+          options: [
+            { label: '北京', value: 'beijing' },
+            { label: '上海', value: 'shanghai' },
+            { label: '广州', value: 'guangzhou' },
+            { label: '深圳', value: 'shenzhen' }
+          ]
+        },
+        {
+          prop: 'status',
+          label: '启用状态',
+          type: 'switch',
+          activeText: '启用',
+          inactiveText: '禁用',
+          defaultValue: true
+        },
+        {
+          prop: 'birthday',
+          label: '出生日期',
+          type: 'date',
+          dateType: 'date',
+          format: 'yyyy-MM-dd',
+          valueFormat: 'timestamp',
+          placeholder: '请选择出生日期'
+        },
+        {
+          prop: 'avatar',
+          label: '头像上传',
+          type: 'inputImageUpload',
+          placeholder: '请选择头像图片'
+        }
+      ],
+      actionsConfig: {
+        submitText: '保存',
+        submitType: 'primary',
+        resetText: '重置',
+        cancelText: '返回',
+        cancelType: 'default'
       }
+    
     }
   },
   created() {
@@ -274,6 +387,25 @@ export default {
     },
     submit_field(){
       this.fieldVisible = false
+    },
+    handleSubmit(data) {
+      console.log('提交数据:', data)
+      // 调用API保存数据
+      this.$message.success('保存成功')
+    },
+    handleChange({ field, value, formData }) {
+      console.log(`${field.label} 改变为:`, value)
+    },
+    handleReset(formData) {
+      console.log('表单已重置', formData)
+    },
+    // 外部调用验证
+    validateForm() {
+      this.$refs.myForm.validate().then(() => {
+        console.log('表单验证通过')
+      }).catch(() => {
+        console.log('表单验证失败')
+      })
     }
   }
 }
